@@ -28,7 +28,7 @@ const jsonLd = [
       const Tag = live ? 'a' : 'div';
       return (
         <Tag class="game-card" href={live ? L(`/${g.slug}`) : undefined} style={`--g:${g.color}`}>
-          <span class={`badge ${g.status}`}>{live ? t('status_live') : t('status_soon')}</span>
+          <span class={`badge ${g.status}`}>{live ? (g.release && Date.parse(g.release) > BUILD_DATE.getTime() ? fmtDate(g.release) : t('status_live')) : t('status_soon')}</span>
           <h3>{g.name}</h3>
           <p>{g.blurb[lang]}</p>
           <p class="muted small">{g.publisher} · {g.platforms}</p>
@@ -47,7 +47,7 @@ const jsonLd = [
           return (
             <tr style={`--g:${g.color}`}>
               <td class="cal-date"><b>{fmtDate(g.release!)}</b><br /><span class="muted small">{d > 0 ? t('days_left', { n: d }) : t('released')}</span></td>
-              <td class="cal-game"><b>{g.name}</b><br /><span class="muted small">{g.blurb[lang]}</span></td>
+              <td class="cal-game"><b>{g.status === 'live' ? <a href={L(`/${g.slug}`)}>{g.name}</a> : g.name}</b><br /><span class="muted small">{g.blurb[lang]}</span></td>
               <td class="hide-sm muted small">{g.publisher}<br />{g.platforms}</td>
             </tr>
           );

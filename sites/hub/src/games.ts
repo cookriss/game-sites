@@ -22,7 +22,7 @@ export const GAMES: Game[] = [
     },
   },
   {
-    slug: 'petit-planet', name: 'Petit Planet', publisher: 'HoYoverse', release: '2026-12-04', status: 'upcoming', platforms: 'PC, iOS, Android', color: '#6fb6d6',
+    slug: 'petit-planet', name: 'Petit Planet', publisher: 'HoYoverse', release: '2026-12-04', status: 'live', platforms: 'PC, iOS, Android', color: '#6fb6d6',
     blurb: {
       en: 'Free cozy life-sim MMO from the studio behind Genshin Impact.',
       es: 'MMO gratuito de vida relajada del estudio de Genshin Impact.',
@@ -38,7 +38,7 @@ export const GAMES: Game[] = [
     },
   },
   {
-    slug: 'ananta', name: 'Ananta', publisher: 'NetEase', release: '2027-01-15', status: 'upcoming', platforms: 'PC, PS5, iOS, Android', color: '#e07a5f',
+    slug: 'ananta', name: 'Ananta', publisher: 'NetEase', release: '2027-01-15', status: 'live', platforms: 'PC, PS5, iOS, Android', color: '#e07a5f',
     blurb: {
       en: 'Free urban open-world action game. Over 17 million pre-registrations.',
       es: 'Juego de acción gratuito en una ciudad de mundo abierto. Más de 17 millones de prerregistros.',

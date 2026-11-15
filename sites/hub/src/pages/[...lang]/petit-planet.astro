@@ -1,0 +1,9 @@
+---
+import GamePage from '../../components/GamePage.astro';
+import { langParams } from '@gamesites/core/lib/i18n';
+import { ctx, SITE } from '../../lib/site';
+import { petitPlanet } from '../../content/petit-planet';
+export function getStaticPaths() { return langParams(SITE); }
+const c = ctx(Astro.params.lang);
+---
+<GamePage c={c} page={petitPlanet} />
