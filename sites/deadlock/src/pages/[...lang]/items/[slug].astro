@@ -1,0 +1,113 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../../../components/Layout.astro';
+import { ctx, getItems, getItemStats, getHeroes, heroRows, WINDOW_DAYS, SITE } from '../../../lib/site';
+import { itemHeroTable, itemChip, type ItemHeroRow } from '../../../lib/render';
+
+export async function getStaticPaths() {
+  const [items, stats] = await Promise.all([getItems(SITE.locales[0]), getItemStats({})]);
+  const withStats = new Set(stats.map((s) => s.itemId));
+  return SITE.locales.flatMap((l) => items.filter((i) => withStats.has(i.id)).map((i) => ({ params: { lang: l.prefix || undefined, slug: i.slug }, props: { itemId: i.id } })));
+}
+const { itemId } = Astro.props as { itemId: number };
+const c = await ctx(Astro.params.lang);
+const { t, L, f } = c;
+const pd = await c.pageData(true);
+const items = await getItems(c.locale);
+const item = items.find((i) => i.id === itemId)!;
+const st = (await getItemStats({})).find((s) => s.itemId === itemId)!;
+const slotName = t(`slot_${item.slot}`);
+// Mid-sentence the slot is lowercase except in English and German.
+const slot = /^(en|de)/.test(c.locale.lang) ? slotName : slotName.toLocaleLowerCase(c.locale.lang);
+
+// Per-hero win rate with this item, compared with the hero's overall win rate.
+const heroes = await getHeroes(c.locale);
+const rows = await heroRows(c.locale, 'all');
+const heroWr = new Map(rows.map((r) => [r.heroId, r.winRate]));
+const perHero: ItemHeroRow[] = (await Promise.all(heroes.map(async (h) => {
+  const s = (await getItemStats({}, h.id)).find((x) => x.itemId === itemId);
+  return s && heroWr.has(h.id) ? { heroId: h.id, matches: s.matches, winRate: s.winRate, heroWr: heroWr.get(h.id)! } : null;
+}))).filter((r): r is ItemHeroRow => !!r);
+const total = perHero.reduce((n, r) => n + r.matches, 0);
+const minM = Math.max(150, Math.round(total * 0.01));
+const solid = perHero.filter((r) => r.matches >= minM).sort((a, b) => (b.winRate - b.heroWr) - (a.winRate - a.heroWr));
+const best = solid.slice(0, 8);
+const worst = solid.slice(-6).reverse().filter((r) => !best.includes(r));
+
+const from = (item.components ?? []).filter((id) => pd.items?.[id]);
+const into = items.filter((i) => i.components?.includes(itemId) && pd.items?.[i.id]).map((i) => i.id);
+const related = items.filter((i) => i.slot === item.slot && i.tier === item.tier && i.id !== itemId && pd.items?.[i.id]).map((i) => i.id);
+const kinds = (['innate', 'passive', 'active'] as const).map((k) => ({ k, label: t(`kind_${k}`), stats: (item.stats ?? []).filter((s) => s.kind === k) })).filter((g) => g.stats.length);
+
+const wr = f.pct(st.winRate);
+const vars = { item: item.name, slot, tier: item.tier, cost: c.nf(item.cost), wr, count: c.compact(st.matches), days: WINDOW_DAYS, month: c.month };
+const title = t('item_title', vars);
+const description = t('item_desc', vars);
+const bestNames = best.slice(0, 3).map((r) => pd.heroes[r.heroId]?.name).filter(Boolean).join(', ');
+const faq = [
+  bestNames && { q: t('item_faq_q1', vars), a: t('item_faq_a1', { ...vars, heroes: bestNames }) },
+  { q: t('item_faq_q2', vars), a: t('item_faq_a2', vars) },
+].filter(Boolean) as { q: string; a: string }[];
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: c.locale.lang, mainEntity: faq.map((x) => ({ '@type': 'Question', name: x.q, acceptedAnswer: { '@type': 'Answer', text: x.a } })) },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: t('nav_items'), item: SITE.url + L('/items') },
+    { '@type': 'ListItem', position: 2, name: item.name, item: SITE.url + L(`/items/${item.slug}`) },
+  ] },
+];
+const chips = (ids: number[]) => ids.map((id) => itemChip(pd, id, 30)).join('');
+---
+<Layout c={c} path={`/items/${item.slug}`} title={title} description={description} jsonLd={jsonLd} ogImage={item.image}>
+  <nav class="small muted"><a href={L('/items')}>{t('nav_items')}</a> / {item.name}</nav>
+  <header class="item-head">
+    <span class={`item-box big slot-${item.slot}`}><Image src={item.image} alt={item.name} width={72} height={72} loading="eager" /></span>
+    <div>
+      <h1>{item.name}</h1>
+      <p class="lede">{t('item_lede', vars)}</p>
+    </div>
+  </header>
+
+  <div class="stat-grid">
+    <div class="card stat"><small>{t('col_wr')}</small><b class={st.winRate >= 0.5 ? 'good' : 'bad'}>{wr}</b></div>
+    <div class="card stat"><small>{t('col_cost')}</small><b>{c.nf(item.cost)}</b></div>
+    <div class="card stat"><small>{t('col_buy')}</small><b>{f.mmss(st.avgBuyTimeS)}</b></div>
+    <div class="card stat"><small>{t('col_matches')}</small><b>{c.compact(st.matches)}</b></div>
+  </div>
+
+  {(kinds.length > 0 || item.description) && (
+    <section>
+      <h2>{t('item_effects', { item: item.name })}</h2>
+      <div class="card">
+        {kinds.map((g) => (
+          <div class="item-stats">
+            <h3 class="small muted">{g.label}</h3>
+            <ul>{g.stats.map((s) => <li><b>{s.value}</b> {s.label}</li>)}</ul>
+          </div>
+        ))}
+        {item.description && <p>{item.description}</p>}
+      </div>
+    </section>
+  )}
+
+  {(from.length > 0 || into.length > 0) && (
+    <div class="two-col">
+      {from.length > 0 && <section><h2>{t('item_from')}</h2><div class="chip-row" set:html={chips(from)} /></section>}
+      {into.length > 0 && <section><h2>{t('item_into')}</h2><div class="chip-row" set:html={chips(into)} /></section>}
+    </div>
+  )}
+
+  <div class="two-col">
+    <section><h2>{t('item_best', { item: item.name })}</h2><Fragment set:html={itemHeroTable(best, pd, f)} /></section>
+    {worst.length > 0 && <section><h2>{t('item_worst', { item: item.name })}</h2><Fragment set:html={itemHeroTable(worst, pd, f)} /></section>}
+  </div>
+  <p class="small muted">{t('item_hero_note', { item: item.name })} {t('window_note', { days: WINDOW_DAYS })}</p>
+
+  {related.length > 0 && (
+    <section><h2>{t('item_related', { slot, tier: item.tier })}</h2><div class="chip-row" set:html={chips(related)} /></section>
+  )}
+
+  <section>
+    <h2>{t('faq')}</h2>
+    {faq.map((x) => <details><summary>{x.q}</summary><p>{x.a}</p></details>)}
+  </section>
+</Layout>

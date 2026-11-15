@@ -55,6 +55,16 @@ const en = {
   col_result: 'Result', col_duration: 'Duration', col_when: 'When', col_souls: 'Souls', win: 'Win', loss: 'Loss',
   sum_matches: 'Matches', sum_wr: 'Win rate', sum_kda: 'KDA', sum_hero: 'Main hero', last_n: 'Last {n} matches',
   players_how: 'How it works', players_how_1: 'Profiles come from public match data collected by deadlock-api.com. Matches usually appear a few minutes after they end.', players_how_2: 'If a player has never been seen in a tracked match, they will not show up yet.',
+  item_title: '{item} in Deadlock: Stats, Win Rate and Best Heroes ({month})',
+  item_desc: '{item} ({slot}, {cost} souls) in Deadlock: what it does, its {wr} win rate and which heroes win most with it. Updated daily.',
+  item_lede: '{slot} item, tier {tier}, {cost} souls. Win rate {wr} over {count} purchases in the last {days} days.',
+  item_effects: 'What {item} does', kind_innate: 'Stats', kind_passive: 'Passive', kind_active: 'Active',
+  item_best: 'Heroes that win most with {item}', item_worst: 'Heroes that win least with {item}',
+  item_hero_note: 'Δ compares the win rate with {item} against the hero\'s overall win rate. Only heroes with enough purchases are shown.',
+  item_from: 'Built from', item_into: 'Upgrades into', item_related: 'Other {slot} items in tier {tier}',
+  item_faq_q1: 'Is {item} good in Deadlock?', item_faq_a1: '{item} has a {wr} win rate over {count} purchases in the last {days} days. It works best on {heroes}.',
+  item_faq_q2: 'How much does {item} cost?', item_faq_a2: '{item} is a tier {tier} {slot} item that costs {cost} souls.',
+  col_hero_wr: 'Win rate with item',
 };
 type D = typeof en;
 
@@ -110,6 +120,16 @@ const es: Partial<D> = {
   col_result: 'Resultado', col_duration: 'Duración', col_when: 'Cuándo', col_souls: 'Almas', win: 'Victoria', loss: 'Derrota',
   sum_matches: 'Partidas', sum_wr: '% de victorias', sum_kda: 'KDA', sum_hero: 'Héroe principal', last_n: 'Últimas {n} partidas',
   players_how: 'Cómo funciona', players_how_1: 'Los perfiles salen de datos públicos de partidas recogidos por deadlock-api.com. Las partidas suelen aparecer unos minutos después de terminar.', players_how_2: 'Si un jugador nunca ha aparecido en una partida registrada, todavía no saldrá.',
+  item_title: '{item} en Deadlock: stats, % de victorias y mejores héroes ({month})',
+  item_desc: '{item} ({slot}, {cost} almas) en Deadlock: qué hace, su {wr} de victorias y con qué héroes gana más. Actualizado a diario.',
+  item_lede: 'Objeto de {slot}, nivel {tier}, {cost} almas. Gana el {wr} de {count} compras en los últimos {days} días.',
+  item_effects: 'Qué hace {item}', kind_innate: 'Estadísticas', kind_passive: 'Pasiva', kind_active: 'Activa',
+  item_best: 'Héroes que más ganan con {item}', item_worst: 'Héroes que menos ganan con {item}',
+  item_hero_note: 'Δ compara el % de victorias con {item} con el % general del héroe. Solo aparecen héroes con suficientes compras.',
+  item_from: 'Se construye a partir de', item_into: 'Mejora a', item_related: 'Otros objetos de {slot} de nivel {tier}',
+  item_faq_q1: '¿Es bueno {item} en Deadlock?', item_faq_a1: '{item} gana el {wr} de {count} compras en los últimos {days} días. Funciona mejor con {heroes}.',
+  item_faq_q2: '¿Cuánto cuesta {item}?', item_faq_a2: '{item} es un objeto de {slot} de nivel {tier} que cuesta {cost} almas.',
+  col_hero_wr: '% victorias con objeto',
 };
 
 const pt: Partial<D> = {
@@ -164,6 +184,16 @@ const pt: Partial<D> = {
   col_result: 'Resultado', col_duration: 'Duração', col_when: 'Quando', col_souls: 'Almas', win: 'Vitória', loss: 'Derrota',
   sum_matches: 'Partidas', sum_wr: 'Taxa de vitória', sum_kda: 'KDA', sum_hero: 'Herói principal', last_n: 'Últimas {n} partidas',
   players_how: 'Como funciona', players_how_1: 'Os perfis vêm de dados públicos de partidas coletados pelo deadlock-api.com. As partidas costumam aparecer alguns minutos depois de terminar.', players_how_2: 'Se um jogador nunca apareceu numa partida registrada, ele ainda não aparece aqui.',
+  item_title: '{item} em Deadlock: stats, taxa de vitória e melhores heróis ({month})',
+  item_desc: '{item} ({slot}, {cost} almas) em Deadlock: o que faz, sua taxa de vitória de {wr} e com quais heróis vence mais. Atualizado diariamente.',
+  item_lede: 'Item de {slot}, nível {tier}, {cost} almas. Taxa de vitória de {wr} em {count} compras nos últimos {days} dias.',
+  item_effects: 'O que {item} faz', kind_innate: 'Atributos', kind_passive: 'Passiva', kind_active: 'Ativa',
+  item_best: 'Heróis que mais vencem com {item}', item_worst: 'Heróis que menos vencem com {item}',
+  item_hero_note: 'Δ compara a taxa de vitória com {item} com a taxa geral do herói. Só aparecem heróis com compras suficientes.',
+  item_from: 'Feito a partir de', item_into: 'Evolui para', item_related: 'Outros itens de {slot} de nível {tier}',
+  item_faq_q1: '{item} é bom em Deadlock?', item_faq_a1: '{item} tem taxa de vitória de {wr} em {count} compras nos últimos {days} dias. Funciona melhor com {heroes}.',
+  item_faq_q2: 'Quanto custa {item}?', item_faq_a2: '{item} é um item de {slot} de nível {tier} que custa {cost} almas.',
+  col_hero_wr: 'Vitória com o item',
 };
 
 const ru: Partial<D> = {
@@ -218,6 +248,16 @@ const ru: Partial<D> = {
   col_result: 'Итог', col_duration: 'Длительность', col_when: 'Когда', col_souls: 'Души', win: 'Победа', loss: 'Поражение',
   sum_matches: 'Матчи', sum_wr: 'Винрейт', sum_kda: 'KDA', sum_hero: 'Основной герой', last_n: 'Последние {n} матчей',
   players_how: 'Как это работает', players_how_1: 'Профили строятся по открытым данным матчей с deadlock-api.com. Матч обычно появляется через несколько минут после окончания.', players_how_2: 'Если игрок ещё не попадал в отслеживаемые матчи, его пока не будет.',
+  item_title: '{item} в Deadlock: статистика, винрейт и лучшие герои ({month})',
+  item_desc: '{item} ({slot}, {cost} душ) в Deadlock: что делает, винрейт {wr} и с какими героями побеждает чаще всего. Обновляется ежедневно.',
+  item_lede: 'Предмет {slot}, уровень {tier}, {cost} душ. Винрейт {wr} по {count} покупкам за последние {days} дн.',
+  item_effects: 'Что делает {item}', kind_innate: 'Характеристики', kind_passive: 'Пассивно', kind_active: 'Активно',
+  item_best: 'Герои, которые чаще побеждают с {item}', item_worst: 'Герои, которые реже побеждают с {item}',
+  item_hero_note: 'Δ — разница между винрейтом с {item} и общим винрейтом героя. Показаны только герои с достаточным числом покупок.',
+  item_from: 'Собирается из', item_into: 'Улучшается в', item_related: 'Другие предметы {slot} уровня {tier}',
+  item_faq_q1: 'Хорош ли {item} в Deadlock?', item_faq_a1: 'Винрейт {item} — {wr} по {count} покупкам за последние {days} дн. Лучше всего подходит для: {heroes}.',
+  item_faq_q2: 'Сколько стоит {item}?', item_faq_a2: '{item} — предмет {slot} уровня {tier}, стоит {cost} душ.',
+  col_hero_wr: 'Винрейт с предметом',
 };
 
 const de: Partial<D> = {
@@ -272,6 +312,16 @@ const de: Partial<D> = {
   col_result: 'Ergebnis', col_duration: 'Dauer', col_when: 'Wann', col_souls: 'Seelen', win: 'Sieg', loss: 'Niederlage',
   sum_matches: 'Matches', sum_wr: 'Siegrate', sum_kda: 'KDA', sum_hero: 'Main-Held', last_n: 'Letzte {n} Matches',
   players_how: 'So funktioniert es', players_how_1: 'Profile stammen aus öffentlichen Matchdaten von deadlock-api.com. Matches erscheinen meist wenige Minuten nach Spielende.', players_how_2: 'Wurde ein Spieler noch in keinem erfassten Match gesehen, erscheint er noch nicht.',
+  item_title: '{item} in Deadlock: Stats, Siegrate und beste Helden ({month})',
+  item_desc: '{item} ({slot}, {cost} Seelen) in Deadlock: was es macht, Siegrate {wr} und mit welchen Helden es am meisten gewinnt. Täglich aktualisiert.',
+  item_lede: '{slot}-Item, Stufe {tier}, {cost} Seelen. Siegrate {wr} aus {count} Käufen der letzten {days} Tage.',
+  item_effects: 'Was {item} macht', kind_innate: 'Werte', kind_passive: 'Passiv', kind_active: 'Aktiv',
+  item_best: 'Helden, die mit {item} am meisten gewinnen', item_worst: 'Helden, die mit {item} am wenigsten gewinnen',
+  item_hero_note: 'Δ vergleicht die Siegrate mit {item} mit der Gesamt-Siegrate des Helden. Nur Helden mit genug Käufen.',
+  item_from: 'Wird gebaut aus', item_into: 'Wird verbessert zu', item_related: 'Weitere {slot}-Items der Stufe {tier}',
+  item_faq_q1: 'Ist {item} gut in Deadlock?', item_faq_a1: '{item} hat eine Siegrate von {wr} aus {count} Käufen der letzten {days} Tage. Am besten auf {heroes}.',
+  item_faq_q2: 'Wie viel kostet {item}?', item_faq_a2: '{item} ist ein {slot}-Item der Stufe {tier} und kostet {cost} Seelen.',
+  col_hero_wr: 'Siegrate mit Item',
 };
 
 const fr: Partial<D> = {
@@ -326,10 +376,20 @@ const fr: Partial<D> = {
   col_result: 'Résultat', col_duration: 'Durée', col_when: 'Quand', col_souls: 'Âmes', win: 'Victoire', loss: 'Défaite',
   sum_matches: 'Parties', sum_wr: 'Taux de victoire', sum_kda: 'KDA', sum_hero: 'Héros principal', last_n: '{n} dernières parties',
   players_how: 'Comment ça marche', players_how_1: 'Les profils proviennent des données publiques de parties collectées par deadlock-api.com. Une partie apparaît en général quelques minutes après la fin.', players_how_2: "Si un joueur n'a jamais été vu dans une partie suivie, il n'apparaîtra pas encore.",
+  item_title: '{item} sur Deadlock : stats, taux de victoire et meilleurs héros ({month})',
+  item_desc: "{item} ({slot}, {cost} âmes) sur Deadlock : ce qu'il fait, son taux de victoire de {wr} et les héros qui gagnent le plus avec. Mis à jour chaque jour.",
+  item_lede: 'Objet {slot}, niveau {tier}, {cost} âmes. Taux de victoire de {wr} sur {count} achats des {days} derniers jours.',
+  item_effects: 'Ce que fait {item}', kind_innate: 'Statistiques', kind_passive: 'Passif', kind_active: 'Actif',
+  item_best: 'Héros qui gagnent le plus avec {item}', item_worst: 'Héros qui gagnent le moins avec {item}',
+  item_hero_note: 'Δ compare le taux de victoire avec {item} au taux global du héros. Seuls les héros avec assez d\'achats sont affichés.',
+  item_from: 'Se construit à partir de', item_into: 'Évolue en', item_related: 'Autres objets {slot} de niveau {tier}',
+  item_faq_q1: '{item} est-il bon sur Deadlock ?', item_faq_a1: '{item} a un taux de victoire de {wr} sur {count} achats des {days} derniers jours. Il marche le mieux sur {heroes}.',
+  item_faq_q2: 'Combien coûte {item} ?', item_faq_a2: '{item} est un objet {slot} de niveau {tier} qui coûte {cost} âmes.',
+  col_hero_wr: 'Victoire avec objet',
 };
 
 export const UI_KEYS_FOR_CLIENT = [
-  'col_tier', 'col_wr', 'col_pr', 'col_br', 'col_matches', 'col_item', 'col_hero', 'col_buy', 'no_data', 'ao_common', 'ao_best', 'pick', 'loading',
+  'col_tier', 'col_wr', 'col_pr', 'col_br', 'col_matches', 'col_item', 'col_hero', 'col_buy', 'no_data', 'col_hero_wr', 'ao_common', 'ao_best', 'pick', 'loading',
   'search_ph', 'search_btn', 'no_results', 'player_not_found', 'player_noid', 'recent_matches', 'most_played', 'unranked', 'steam_profile',
   'col_result', 'col_duration', 'col_when', 'col_souls', 'col_kda', 'win', 'loss', 'sum_matches', 'sum_wr', 'sum_kda', 'sum_hero', 'last_n', 'player_title',
   'st_kills', 'st_deaths', 'st_assists', 'st_networth', 'st_damage', 'st_taken', 'st_obj', 'st_lasthits', 'st_denies', 'st_accuracy',

@@ -4,6 +4,23 @@ import type { DataSource, Hero, Item, Rank, Patch, Slot } from './model';
 import { API, urls, norm } from './deadlock-api-core';
 
 const strip = (s?: string) => (s ?? '').replace(/<svg[\s\S]*?<\/svg>/g, '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+/** Tooltip stats of an item, formatted like the game shows them. */
+function itemStatsOf(i: any): Item['stats'] {
+  const out: NonNullable<Item['stats']> = []; const seen = new Set<string>();
+  for (const sec of i.tooltip_sections ?? []) {
+    const kind = sec.section_type === 'active' ? 'active' : sec.section_type === 'passive' ? 'passive' : 'innate';
+    for (const a of sec.section_attributes ?? []) {
+      for (const key of [...(a.elevated_properties ?? []), ...(a.properties ?? [])]) {
+        const p = i.properties?.[key]; if (!p || seen.has(key) || !p.label) continue;
+        const n = Number(p.value); if (!Number.isFinite(n) || n === 0) continue;
+        seen.add(key);
+        const sign = (p.prefix === '{s:sign}' || p.prefix === '+') && n > 0 ? '+' : '';
+        out.push({ label: strip(p.label), value: `${sign}${Number(n.toFixed(2))}${(p.postfix ?? '').replace(/\{[^}]*\}/g, '')}`, kind });
+      }
+    }
+  }
+  return out;
+}
 const rawItems = (lang: string) => fetchJson<any[]>(`${API}/v1/assets/items?language=${lang}`);
 
 export const deadlockApi: DataSource = {
@@ -46,6 +63,7 @@ export const deadlockApi: DataSource = {
   async items(lang) {
     const [raw, english] = await Promise.all([rawItems(lang), rawItems('english')]);
     const enName = new Map(english.map((i) => [i.id, i.name]));
+    const byClass = new Map(raw.map((i) => [i.class_name, { id: Number(i.id) }]));
     return raw
       .filter((i) => i.type === 'upgrade' && i.shopable && !i.disabled)
       .map((i): Item => ({
@@ -58,6 +76,8 @@ export const deadlockApi: DataSource = {
         image: i.shop_image_webp ?? i.shop_image ?? i.image_webp ?? i.image,
         active: Boolean(i.is_active_item),
         description: strip(i.description?.desc),
+        stats: itemStatsOf(i),
+        components: (i.component_items ?? []).map((c: string) => byClass.get(c)?.id).filter((x: unknown): x is number => typeof x === 'number'),
       }));
   },
 

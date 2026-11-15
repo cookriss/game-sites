@@ -38,11 +38,21 @@ export const heroChip = (d: PageData, id: number, size = 28, link = true) => {
   const inner = `<img src="${h.img}" alt="" width="${size}" height="${Math.round(size * 1.35)}" loading="lazy" class="hero-img" style="background:${h.color}55"><span>${esc(h.name)}</span>`;
   return link ? `<a class="hero-chip" href="${heroHref(d, h.slug)}">${inner}</a>` : `<span class="hero-chip">${inner}</span>`;
 };
-export const itemChip = (d: PageData, id: number, size = 26) => {
+export const itemHref = (d: PageData, slug: string) => `${d.prefix ? `/${d.prefix}` : ''}/items/${slug}`;
+export const itemChip = (d: PageData, id: number, size = 26, link = true) => {
   const it = d.items?.[id];
   if (!it) return '';
-  return `<span class="item-chip slot-${it.slot}" title="${esc(it.name)}"><span class="item-box"><img src="${it.img}" alt="" width="${size}" height="${size}" loading="lazy"></span><span>${esc(it.name)}</span></span>`;
+  const inner = `<span class="item-box"><img src="${it.img}" alt="" width="${size}" height="${size}" loading="lazy"></span><span>${esc(it.name)}</span>`;
+  return link ? `<a class="item-chip slot-${it.slot}" href="${itemHref(d, it.slug)}">${inner}</a>` : `<span class="item-chip slot-${it.slot}">${inner}</span>`;
 };
+
+/** Heroes ranked by how much better they do with an item than without it. */
+export interface ItemHeroRow { heroId: number; matches: number; winRate: number; heroWr: number }
+export function itemHeroTable(rows: ItemHeroRow[], d: PageData, f: Fmt) {
+  if (!rows.length) return `<p class="muted">${d.s.no_data}</p>`;
+  return `<div class="table-wrap"><table><thead><tr><th style="text-align:left">${d.s.col_hero}</th><th>${d.s.col_hero_wr}</th><th>Δ</th><th class="hide-sm">${d.s.col_matches}</th></tr></thead><tbody>${rows.map((r) =>
+    `<tr><td style="text-align:left">${heroChip(d, r.heroId, 26)}</td><td class="${cls(r.winRate - 0.5)}"><b>${f.pct(r.winRate)}</b></td><td class="small ${cls(r.winRate - r.heroWr)}">${f.delta(r.winRate - r.heroWr)}</td><td class="hide-sm">${f.compact(r.matches)}</td></tr>`).join('')}</tbody></table></div>`;
+}
 
 // ---------- tier list ----------
 export interface TierRow extends HeroStat { tier: Tier; banRate?: number; rank: number }

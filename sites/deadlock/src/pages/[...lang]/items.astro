@@ -5,7 +5,7 @@ import { langParams } from '@gamesites/core/lib/i18n';
 import { ctx, getItems, getItemStats, WINDOW_DAYS, SITE } from '../../lib/site';
 export function getStaticPaths() { return langParams(SITE); }
 const c = await ctx(Astro.params.lang);
-const { t } = c;
+const { t, L } = c;
 const stats = new Map((await getItemStats('all')).map((s) => [s.itemId, s]));
 const items = (await getItems(c.locale)).filter((i) => stats.has(i.id));
 const slots = (['weapon', 'vitality', 'spirit'] as const).map((slot) => ({
@@ -23,7 +23,7 @@ const slots = (['weapon', 'vitality', 'spirit'] as const).map((slot) => ({
         <table>
           <thead><tr><th>{t('col_item')}</th><th>{t('col_level')}</th><th>{t('col_cost')}</th><th>{t('col_wr')}</th><th>{t('col_matches')}</th></tr></thead>
           <tbody>{s.items.map((i) => { const st = stats.get(i.id)!; return (
-            <tr><td><ItemIcon item={i} size={26} /></td><td>{i.tier}</td><td>{c.nf(i.cost)}</td><td class={st.winRate >= .5 ? 'good' : 'bad'}>{c.pct(st.winRate)}</td><td>{c.compact(st.matches)}</td></tr>
+            <tr><td><ItemIcon item={i} size={26} href={L(`/items/${i.slug}`)} /></td><td>{i.tier}</td><td>{c.nf(i.cost)}</td><td class={st.winRate >= .5 ? 'good' : 'bad'}>{c.pct(st.winRate)}</td><td>{c.compact(st.matches)}</td></tr>
           ); })}</tbody>
         </table>
       </div>

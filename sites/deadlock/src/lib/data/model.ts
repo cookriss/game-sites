@@ -32,6 +32,10 @@ export interface Ability { id: number; name: string; image?: string; description
 export interface Item {
   id: number; slug: string; name: string; slot: Slot; tier: number; cost: number; image: string; active: boolean;
   description?: string;
+  /** Stats shown in the in-game tooltip, already formatted (e.g. "+8 %" Weapon Damage). */
+  stats?: { label: string; value: string; kind: 'innate' | 'passive' | 'active' }[];
+  /** Items this one is built from. */
+  components?: number[];
 }
 
 export interface HeroStat {

@@ -1,13 +1,14 @@
 ---
 import { Image } from 'astro:assets';
 import type { Item } from '../lib/data';
-interface Props { item: Item; size?: number; label?: boolean }
-const { item, size = 32, label = true } = Astro.props;
+interface Props { item: Item; size?: number; label?: boolean; href?: string }
+const { item, size = 32, label = true, href } = Astro.props;
+const Tag = href ? 'a' : 'span';
 ---
-<span class={`item-chip slot-${item.slot}`} title={item.name}>
+<Tag class={`item-chip slot-${item.slot}`} title={item.name} href={href}>
   <span class="item-box"><Image src={item.image} alt={item.name} width={size} height={size} loading="lazy" /></span>
   {label && <span>{item.name}</span>}
-</span>
+</Tag>
 <style>
   .item-chip { display: inline-flex; align-items: center; gap: 8px; }
   .item-box { display: inline-grid; place-items: center; padding: 3px; border-radius: 6px; line-height: 0; }

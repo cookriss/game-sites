@@ -51,3 +51,16 @@ table.matches tr.m-loss td:first-child { box-shadow: inset 3px 0 var(--bad); }
 .stat:has(.rank) small { padding-right: 58px; }
 .player-list img, .player-head .avatar { background: var(--line); }
 .player-list small { display: block; color: var(--muted); font-size: .75rem; }
+
+/* item pages */
+.item-head { display: flex; align-items: center; gap: 16px; margin: 10px 0 16px; }
+.item-head .lede { margin: 4px 0 0; }
+.item-box.big { padding: 6px; border-radius: 10px; }
+.item-box.big img { width: 72px; height: 72px; }
+.slot-weapon.item-box, .slot-weapon .item-box { background: #c9772b; }
+.slot-vitality.item-box, .slot-vitality .item-box { background: #5a9a3a; }
+.slot-spirit.item-box, .slot-spirit .item-box { background: #8a5ac2; }
+.item-stats h3 { margin: 0 0 4px; text-transform: uppercase; letter-spacing: .04em; font-weight: 600; }
+.item-stats ul { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 4px 18px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.chip-row { display: flex; flex-wrap: wrap; gap: 10px 16px; }
+a.item-chip { color: var(--text); }
