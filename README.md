@@ -10,16 +10,7 @@ sites/<game>/    One Astro site per game (none active right now).
 
 ## Starting a new game site
 
-The first site (Deadlock) was removed on 2026-11-15. Its full code is kept in the branch `archive/deadlock` and is the template for the next site:
-
-```
-git checkout origin/archive/deadlock -- sites/deadlock
-git mv sites/deadlock sites/<game>
-```
-
-Then change `site.config.ts`, the strings in `src/i18n/ui.ts` and the data source in `src/lib/data/` (pages only read data through the `DataSource` interface in `model.ts`).
-
-Deploy: create a Cloudflare Pages project connected to this repo, with build command `npm run build -w sites/<game>`, output `sites/<game>/dist`, and Node from `.node-version`. A daily rebuild can be scheduled with a GitHub Action that commits a timestamp (see `.github/workflows/daily-refresh.yml` in that branch).
+Add `sites/<game>` as an Astro site that imports from `@gamesites/core`, with its own `site.config.ts`, strings and data source. Deploy it as its own Cloudflare Pages project connected to this repo (build `npm run build -w sites/<game>`, output `sites/<game>/dist`, Node from `.node-version`).
 
 ## Legal and consent (all sites)
 
