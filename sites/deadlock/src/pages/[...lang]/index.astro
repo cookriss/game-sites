@@ -1,0 +1,44 @@
+---
+import Layout from '../../components/Layout.astro';
+import HeroIcon from '../../components/HeroIcon.astro';
+import { langParams } from '@gamesites/core/lib/i18n';
+import { ctx, heroRows, getPatches, SITE } from '../../lib/site';
+export function getStaticPaths() { return langParams(SITE); }
+const c = await ctx(Astro.params.lang);
+const { t, L } = c;
+const rows = await heroRows(c.locale, 'all');
+const top = rows.slice(0, 8);
+const patches = (await getPatches()).slice(0, 5);
+const jsonLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: SITE.url + L('/'), inLanguage: c.locale.lang };
+---
+<Layout c={c} path="/" title={t('home_title')} description={t('home_desc')} jsonLd={jsonLd}>
+  <h1>{t('home_h1')}</h1>
+  <p class="lede">{t('home_lede')}</p>
+
+  <h2>{t('top_heroes')}</h2>
+  <div class="grid">
+    {top.map((r) => (
+      <a class="card hero-card" href={L(`/heroes/${r.hero.slug}`)}>
+        <HeroIcon hero={r.hero} size={44} label={false} />
+        <span class="hc-main"><strong>{r.hero.name}</strong><span class="muted small">{c.pct(r.winRate)} · {c.compact(r.matches)}</span></span>
+        <span class={`tier tier-${r.tier}`}>{r.tier}</span>
+      </a>
+    ))}
+  </div>
+  <p><a href={L('/tier-list')}>{t('full_tier')} →</a> · <a href={L('/heroes')}>{t('all_heroes')} →</a></p>
+
+  {patches.length > 0 && (
+    <>
+      <h2>{t('latest_patches')}</h2>
+      <ul class="patches">
+        {patches.map((p) => <li><a href={p.url} rel="nofollow noopener" target="_blank">{p.title}</a> <span class="muted small">{new Date(p.date).toLocaleDateString(c.locale.lang, { timeZone: 'UTC' })}</span></li>)}
+      </ul>
+    </>
+  )}
+</Layout>
+<style>
+  .hero-card { display: flex; align-items: center; gap: 12px; color: var(--text); }
+  .hero-card:hover { text-decoration: none; border-color: var(--accent); }
+  .hc-main { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+  .patches { padding-left: 18px; } .patches li { margin: 4px 0; }
+</style>

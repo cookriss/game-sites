@@ -1,0 +1,54 @@
+---
+import Layout from '../../components/Layout.astro';
+import HeroIcon from '../../components/HeroIcon.astro';
+import { langParams } from '@gamesites/core/lib/i18n';
+import { ctx, heroRows, WINDOW_DAYS, SITE } from '../../lib/site';
+export function getStaticPaths() { return langParams(SITE); }
+const c = await ctx(Astro.params.lang);
+const { t, L } = c;
+const brackets = [
+  { key: 'all', label: t('all_ranks'), rows: await heroRows(c.locale, 'all') },
+  { key: 'high', label: t('high_ranks'), rows: await heroRows(c.locale, 'high') },
+] as const;
+const title = t('tier_title', { month: c.month });
+const description = t('tier_desc', { month: c.month, count: c.compact(c.matches) });
+const jsonLd = {
+  '@context': 'https://schema.org', '@type': 'ItemList', name: title,
+  itemListElement: brackets[0].rows.map((r, i) => ({ '@type': 'ListItem', position: i + 1, name: r.hero.name, url: SITE.url + L(`/heroes/${r.hero.slug}`) })),
+};
+---
+<Layout c={c} path="/tier-list" title={title} description={description} jsonLd={jsonLd}>
+  <h1>{t('tier_h1')} <span class="muted" style="font-weight:400">· {c.month}</span></h1>
+  <p class="lede">{t('tier_lede', { days: WINDOW_DAYS })}</p>
+  <div class="seg" role="group" data-seg>
+    {brackets.map((b, i) => <button type="button" data-b={b.key} aria-pressed={i === 0 ? 'true' : 'false'}>{b.label}</button>)}
+  </div>
+  {brackets.map((b, i) => (
+    <div class="table-wrap" data-panel={b.key} hidden={i !== 0} style="margin-top:14px">
+      <table>
+        <thead><tr><th>{t('col_hero')}</th><th>{t('col_tier')}</th><th>{t('col_wr')}</th><th>{t('col_pr')}</th><th class="hide-sm">{t('col_kda')}</th><th class="hide-sm">{t('col_matches')}</th></tr></thead>
+        <tbody>
+          {b.rows.map((r) => (
+            <tr>
+              <td><HeroIcon hero={r.hero} size={30} href={L(`/heroes/${r.hero.slug}`)} /></td>
+              <td><span class={`tier tier-${r.tier}`}>{r.tier}</span></td>
+              <td class={r.winRate >= 0.5 ? 'good' : 'bad'}>{c.pct(r.winRate)}</td>
+              <td>{c.pct(r.pickRate)}</td>
+              <td class="hide-sm">{c.nf(r.kills, 1)} / {c.nf(r.deaths, 1)} / {c.nf(r.assists, 1)}</td>
+              <td class="hide-sm">{c.compact(r.matches)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  ))}
+  <script>
+    const seg = document.querySelector('[data-seg]');
+    seg?.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest('button');
+      if (!btn) return;
+      seg.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      document.querySelectorAll<HTMLElement>('[data-panel]').forEach((p) => (p.hidden = p.dataset.panel !== btn.dataset.b));
+    });
+  </script>
+</Layout>

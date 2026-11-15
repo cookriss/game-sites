@@ -1,0 +1,12 @@
+---
+import BaseLayout from '@gamesites/core/layouts/BaseLayout.astro';
+import { ctx } from '../lib/site';
+import { data } from '../lib/data';
+const c = await ctx(undefined);
+---
+<BaseLayout site={c.site} locale={c.locale} path="/about" title={`About | ${c.site.name}`} description={`About ${c.site.name}, a fan-made Deadlock stats site.`} nav={c.nav} strings={c.strings} localized={false}>
+  <h1>About {c.site.name}</h1>
+  <p>{c.site.name} is a free, fan-made site with statistics, builds and tier lists for Deadlock. Stats are recalculated every day from recent public matches.</p>
+  <p>Match data comes from the community project <a href={data.attribution.url}>{data.attribution.label}</a>. Thanks to them for making it open.</p>
+  <p>{c.strings.disclaimer}</p>
+</BaseLayout>

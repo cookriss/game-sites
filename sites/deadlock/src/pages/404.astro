@@ -1,0 +1,9 @@
+---
+import BaseLayout from '@gamesites/core/layouts/BaseLayout.astro';
+import { ctx } from '../lib/site';
+const c = await ctx(undefined);
+---
+<BaseLayout site={c.site} locale={c.locale} path="/404" title={`Page not found | ${c.site.name}`} description="Page not found" nav={c.nav} strings={c.strings} localized={false}>
+  <h1>Page not found</h1>
+  <p><a href="/">Go to the home page</a> or the <a href="/tier-list">tier list</a>.</p>
+</BaseLayout>
