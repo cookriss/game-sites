@@ -29,11 +29,11 @@ const abs = (p: string) => site.url + p;
 const canonical = abs(localePath(locale, path));
 const alternates = localized && locs.length > 1 ? locs.map((l) => ({ lang: l.lang, href: abs(localePath(l, path)) })) : [];
 const current = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
-const exact = nav.some((n) => n.href.replace(/\/$/, '') === current);
-const isCurrent = (href: string) => {
-  const h = href.replace(/\/$/, '');
-  return exact ? h === current : h !== localePath(locale, '/').replace(/\/$/, '') && current.startsWith(h);
-};
+// Highlight the nav item whose path is the longest prefix of the current URL (home only on exact match).
+const home = localePath(locale, '/').replace(/\/$/, '') || '/';
+const norm = (h: string) => h.replace(/\/$/, '') || '/';
+const best = nav.map((n) => norm(n.href)).filter((h) => h === current || (h !== home && current.startsWith(h + '/'))).sort((a, b) => b.length - a.length)[0];
+const isCurrent = (href: string) => norm(href) === best;
 const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 ---
 <!doctype html>

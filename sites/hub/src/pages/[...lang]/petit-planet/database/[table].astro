@@ -1,0 +1,25 @@
+---
+import GamePage from '../../../../components/GamePage.astro';
+import DbView from '../../../../components/DbView.astro';
+import { langParams } from '@gamesites/core/lib/i18n';
+import { ctx, SITE } from '../../../../lib/site';
+import { PP_TABLES, type DbTable } from '../../../../content/petit-planet-db';
+import type { GamePageContent } from '../../../../content/types';
+
+export function getStaticPaths() {
+  return langParams(SITE).flatMap((p) => PP_TABLES.map((t) => ({ params: { ...p.params, table: t.id }, props: { table: t } })));
+}
+const { table } = Astro.props as { table: DbTable };
+const c = ctx(Astro.params.lang);
+const empty = table.rows.length === 0;
+const DB = { en: 'Database', es: 'Base de datos', pt: 'Banco de dados' };
+const h1 = { en: `Petit Planet ${table.name.en.toLowerCase()}`, es: `${table.name.es} de Petit Planet`, pt: `${table.name.pt} de Petit Planet` };
+const page: GamePageContent = {
+  slug: 'petit-planet', path: `/petit-planet/database/${table.id}`, parent: { path: '/petit-planet/database', label: DB }, crumb: table.name,
+  name: 'Petit Planet', updated: '2026-11-15', noindex: empty,
+  title: table.title, description: table.description, h1, lede: table.blurb, sections: [], sources: [],
+};
+---
+<GamePage c={c} page={page}>
+  <DbView table={table} lang={c.lang} release="2026-12-04" backHref={c.L('/petit-planet/database')} />
+</GamePage>

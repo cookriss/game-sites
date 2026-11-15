@@ -2,7 +2,7 @@ export type Lang = 'en' | 'es' | 'pt';
 export type L = Record<Lang, string>;
 
 /** Pre-launch / overview page for one game. Every fact should trace to a listed source. */
-export interface NavLink { path: string; label: L }
+export interface NavLink { path: string; label: L; /** Card text on the section home */ blurb?: L; /** Icon id from content/pp/art.ts */ icon?: string }
 
 export interface GamePageContent {
   /** Game slug (theme, section nav, publisher lookup). */
@@ -11,6 +11,10 @@ export interface GamePageContent {
   path?: string;
   /** Short name of this page in breadcrumbs for sub-pages (e.g. "Neighbors"). */
   crumb?: L;
+  /** Middle breadcrumb for deeper pages (e.g. Database) */
+  parent?: { path: string; label: L };
+  /** Keep out of search results (empty database pages) */
+  noindex?: boolean;
   name: string;
   /** ISO date of the last content review, shown on the page. */
   updated: string;

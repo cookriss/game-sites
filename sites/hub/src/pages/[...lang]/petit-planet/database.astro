@@ -1,0 +1,43 @@
+---
+import GamePage from '../../../components/GamePage.astro';
+import { langParams } from '@gamesites/core/lib/i18n';
+import { ctx, SITE } from '../../../lib/site';
+import { PP_TABLES, PP_LIVE_TABLES } from '../../../content/petit-planet-db';
+import { icon } from '../../../content/pp/art';
+import type { GamePageContent } from '../../../content/types';
+export function getStaticPaths() { return langParams(SITE); }
+const c = ctx(Astro.params.lang);
+const { lang, L } = c;
+const soon = { en: 'Coming soon', es: 'Próximamente', pt: 'Em breve' }[lang];
+const entries = { en: 'entries', es: 'entradas', pt: 'itens' }[lang];
+const page: GamePageContent = {
+  slug: 'petit-planet', path: '/petit-planet/database', crumb: { en: 'Database', es: 'Base de datos', pt: 'Banco de dados' },
+  name: 'Petit Planet', updated: '2026-11-15', noindex: PP_LIVE_TABLES.length === 0,
+  title: { en: 'Petit Planet Database: Recipes, Fish, Bugs, Crops, Furniture and More', es: 'Base de datos de Petit Planet: recetas, peces, insectos, cultivos, muebles y más', pt: 'Banco de dados de Petit Planet: receitas, peixes, insetos, cultivos, móveis e mais' },
+  description: { en: 'Every Petit Planet recipe, fish, bug, crop, flower, material, furniture item, outfit and Neighbor gift, with search and filters.', es: 'Todas las recetas, peces, insectos, cultivos, flores, materiales, muebles, ropa y regalos de Petit Planet, con buscador y filtros.', pt: 'Todas as receitas, peixes, insetos, cultivos, flores, materiais, móveis, roupas e presentes de Petit Planet, com busca e filtros.' },
+  h1: { en: 'Petit Planet database', es: 'Base de datos de Petit Planet', pt: 'Banco de dados de Petit Planet' },
+  lede: { en: 'Everything you can collect, cook, grow and give, with search and filters. The tables fill up from launch day, 4 December 2026.', es: 'Todo lo que puedes coleccionar, cocinar, cultivar y regalar, con buscador y filtros. Las tablas se rellenan desde el día del lanzamiento, el 4 de diciembre de 2026.', pt: 'Tudo o que você pode colecionar, cozinhar, cultivar e presentear, com busca e filtros. As tabelas são preenchidas a partir do dia do lançamento, 4 de dezembro de 2026.' },
+  sections: [], sources: [],
+};
+---
+<GamePage c={c} page={page}>
+  <div class="db-grid">
+    {PP_TABLES.map((t) => (
+      <a class="db-card" href={L(`/petit-planet/database/${t.id}`)}>
+        <Fragment set:html={icon(t.id, 52)} />
+        <b>{t.name[lang]}</b>
+        <small>{t.blurb[lang]}</small>
+        <span class:list={['tag', { live: t.rows.length > 0 }]}>{t.rows.length > 0 ? `${t.rows.length} ${entries}` : soon}</span>
+      </a>
+    ))}
+  </div>
+</GamePage>
+<style>
+  .db-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); margin: 8px 0 20px; }
+  .db-card { display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 18px; background: var(--panel); border: 1px solid var(--line); color: var(--text); transition: transform .15s, box-shadow .15s; }
+  .db-card:hover { text-decoration: none; transform: translateY(-2px); box-shadow: 0 6px 18px #8f86c933; }
+  .db-card b { font-size: 1.1rem; color: #5a4bc4; }
+  .db-card small { color: var(--muted); line-height: 1.35; }
+  .tag { align-self: flex-start; margin-top: 6px; padding: 2px 10px; border-radius: 999px; font-size: .78rem; font-weight: 800; background: #f1edff; color: #7a6fc0; }
+  .tag.live { background: #7fcf9f; color: #fff; }
+</style>

@@ -1,4 +1,5 @@
 import type { GamePageContent, L, Lang } from './types';
+import { avatar, type Species } from './pp/art';
 
 /**
  * Neighbors seen in official trailers and the three closed betas.
@@ -12,23 +13,27 @@ interface Neighbor {
   /** MM-DD */
   birthday?: string;
   species?: L;
+  /** Drawn avatar style; others get an initial badge */
+  kind?: Species;
+  /** Real portrait path (e.g. /img/pp/mobai.webp) to replace the drawn avatar */
+  image?: string;
   galaxy?: string;
   note?: L;
 }
 
 const NEIGHBORS: Neighbor[] = [
-  { name: 'Mobai', role: { en: 'Life Coordinator', es: 'Coordinador de vida', pt: 'Coordenador de vida' }, birthday: '02-19', species: { en: 'Dog', es: 'Perro', pt: 'Cachorro' },
+  { name: 'Mobai', kind: 'dog', role: { en: 'Life Coordinator', es: 'Coordinador de vida', pt: 'Coordenador de vida' }, birthday: '02-19', species: { en: 'Dog', es: 'Perro', pt: 'Cachorro' },
     note: { en: 'Your first contact. He represents the company that registers your planet and helps you settle in.', es: 'Tu primer contacto. Representa a la empresa que registra tu planeta y te ayuda a instalarte.', pt: 'Seu primeiro contato. Representa a empresa que registra seu planeta e ajuda você a se instalar.' } },
   { name: 'Elsasani', aka: 'Esassani', role: { en: 'Starsea Racer', es: 'Carreras por el Mar Estelar', pt: 'Corridas pelo Mar Estelar' }, birthday: '02-14',
     note: { en: 'Part of your starting support team. The 2025 reveal spelled the name Esassani.', es: 'Forma parte de tu equipo inicial. En el anuncio de 2025 su nombre aparecía como Esassani.', pt: 'Faz parte da sua equipe inicial. No anúncio de 2025 o nome aparecia como Esassani.' } },
   { name: 'Glenn', role: { en: 'Shopkeeper', es: 'Tienda', pt: 'Loja' }, birthday: '05-01',
     note: { en: 'Runs the shop where you buy items. Arrives early with Mobai and Elsasani.', es: 'Lleva la tienda donde compras objetos. Llega pronto, con Mobai y Elsasani.', pt: 'Cuida da loja onde você compra itens. Chega cedo, com Mobai e Elsasani.' } },
-  { name: 'Yunguo', role: { en: 'Cultivator', es: 'Cultivadora', pt: 'Cultivadora' }, birthday: '09-19', species: { en: 'Red panda', es: 'Panda rojo', pt: 'Panda-vermelho' }, galaxy: 'Hexia',
+  { name: 'Yunguo', kind: 'red-panda', role: { en: 'Cultivator', es: 'Cultivadora', pt: 'Cultivadora' }, birthday: '09-19', species: { en: 'Red panda', es: 'Panda rojo', pt: 'Panda-vermelho' }, galaxy: 'Hexia',
     note: { en: 'Shy and loves plants. Her requests teach you to grow crops.', es: 'Tímida y amante de las plantas. Sus encargos te enseñan a cultivar.', pt: 'Tímida e apaixonada por plantas. Os pedidos dela ensinam você a cultivar.' } },
   { name: 'Isaki', role: { en: 'Beetle Trainer', es: 'Entrenamiento de escarabajos', pt: 'Treino de besouros' }, birthday: '07-22', galaxy: 'Hexia' },
-  { name: 'Medowlyn', role: { en: 'Plushie Designer', es: 'Diseñadora de peluches', pt: 'Designer de pelúcias' }, birthday: '07-05', species: { en: 'Sheep', es: 'Oveja', pt: 'Ovelha' }, galaxy: 'Norvan',
+  { name: 'Medowlyn', kind: 'sheep', role: { en: 'Plushie Designer', es: 'Diseñadora de peluches', pt: 'Designer de pelúcias' }, birthday: '07-05', species: { en: 'Sheep', es: 'Oveja', pt: 'Ovelha' }, galaxy: 'Norvan',
     note: { en: 'Linked to the Season of Snowfall story added in the final beta.', es: 'Ligada a la historia de la Temporada de Nevadas que llegó en la última beta.', pt: 'Ligada à história da Temporada de Neve que chegou no último beta.' } },
-  { name: 'Msafiri', role: { en: 'Adventure Guide', es: 'Guía de aventuras', pt: 'Guia de aventuras' }, birthday: '08-08', species: { en: 'Caracal', es: 'Caracal', pt: 'Caracal' }, galaxy: 'Taffeh' },
+  { name: 'Msafiri', kind: 'caracal', role: { en: 'Adventure Guide', es: 'Guía de aventuras', pt: 'Guia de aventuras' }, birthday: '08-08', species: { en: 'Caracal', es: 'Caracal', pt: 'Caracal' }, galaxy: 'Taffeh' },
   { name: 'Frostia', role: { en: 'Mystic Scholar', es: 'Saber místico', pt: 'Saber místico' }, birthday: '09-09', galaxy: 'Norvan' },
   { name: 'Dorjelang', role: { en: 'Hatmaker', es: 'Sombrerería', pt: 'Chapelaria' }, birthday: '05-02', galaxy: 'Hexia',
     note: { en: 'Met on a Starsea Voyage in the betas.', es: 'En las betas se le encontraba en un viaje por el Mar Estelar.', pt: 'Nos betas aparecia em uma viagem pelo Mar Estelar.' } },
@@ -62,7 +67,8 @@ function cards(lang: Lang): string {
       n.birthday && `${T.birthday[lang]}: ${day(n.birthday)}`,
       n.galaxy && `${T.galaxy[lang]}: ${n.galaxy}`,
     ].filter(Boolean).join(' · ');
-    return `<div class="ncard" id="${id}"><h3>${esc(n.name)}</h3><div class="role">${esc(n.role[lang])}</div>`
+    const pic = n.image ? `<img class="avatar" src="${n.image}" alt="${esc(n.name)}" width="72" height="72" loading="lazy">` : avatar(n.name, n.kind);
+    return `<div class="ncard" id="${id}"><div class="nhead">${pic}<div><h3>${esc(n.name)}</h3><div class="role">${esc(n.role[lang])}</div></div></div>`
       + (meta ? `<p class="muted">${esc(meta)}</p>` : '')
       + (n.note ? `<p>${esc(n.note[lang])}</p>` : '')
       + (n.aka ? `<p class="muted small">${T.aka[lang]}: ${esc(n.aka)}</p>` : '')
@@ -96,21 +102,21 @@ export const petitPlanetNeighbors: GamePageContent = {
   },
   sections: [
     {
-      id: 'how',
-      h: { en: 'How Neighbors work', es: 'Cómo funcionan los vecinos', pt: 'Como os vizinhos funcionam' },
-      html: {
-        en: '<ul><li><b>Arriving:</b> a few come at the start, more join as your Luca Arbor grows, and others are found on islets during Starsea Voyages and invited to move in.</li><li><b>Friendship:</b> talk to them, give gifts they like and complete their requests. Higher friendship unlocks their story, new items, recipes and services.</li><li><b>Gifts:</b> each Neighbor has likes and dislikes. A disliked gift, or handing back something they just gave you, upsets them.</li><li><b>Voyages:</b> you can take a Neighbor with you on a Starsea Voyage, and they gather resources based on their skills.</li></ul>',
-        es: '<ul><li><b>Cómo llegan:</b> algunos están desde el principio, otros se unen a medida que crece tu Árbol Luca y otros se encuentran en islotes durante los viajes por el Mar Estelar y se les invita a mudarse.</li><li><b>Amistad:</b> habla con ellos, hazles regalos que les gusten y cumple sus encargos. Con más amistad desbloqueas su historia, objetos nuevos, recetas y servicios.</li><li><b>Regalos:</b> cada vecino tiene gustos y manías. Un regalo que no le gusta, o devolverle algo que te acaba de dar, le molesta.</li><li><b>Viajes:</b> puedes llevar a un vecino en los viajes por el Mar Estelar, y recoge recursos según sus habilidades.</li></ul>',
-        pt: '<ul><li><b>Como chegam:</b> alguns estão desde o começo, outros chegam conforme sua Árvore Luca cresce e outros são encontrados em ilhotas nas viagens pelo Mar Estelar e convidados a se mudar.</li><li><b>Amizade:</b> converse com eles, dê presentes de que gostem e cumpra os pedidos deles. Com mais amizade você desbloqueia a história deles, novos itens, receitas e serviços.</li><li><b>Presentes:</b> cada vizinho tem gostos e manias. Um presente de que não gosta, ou devolver algo que ele acabou de te dar, o deixa chateado.</li><li><b>Viagens:</b> você pode levar um vizinho nas viagens pelo Mar Estelar, e ele coleta recursos de acordo com suas habilidades.</li></ul>',
-      },
-    },
-    {
       id: 'list',
       h: { en: 'All known Neighbors', es: 'Todos los vecinos conocidos', pt: 'Todos os vizinhos conhecidos' },
       html: {
         en: cards('en') + '<p class="note">Birthdays and galaxies come from the betas and character teasers and could change at launch. We will update this list, and add each Neighbor\'s favorite gifts, from 4 December.</p>',
         es: cards('es') + '<p class="note">Los cumpleaños y las galaxias vienen de las betas y de los avances de personajes, y podrían cambiar en el lanzamiento. Actualizaremos la lista, y añadiremos los regalos favoritos de cada vecino, a partir del 4 de diciembre.</p>',
         pt: cards('pt') + '<p class="note">Os aniversários e as galáxias vêm dos betas e das prévias de personagens, e podem mudar no lançamento. Vamos atualizar a lista, e adicionar os presentes favoritos de cada vizinho, a partir de 4 de dezembro.</p>',
+      },
+    },
+    {
+      id: 'how',
+      h: { en: 'How Neighbors work', es: 'Cómo funcionan los vecinos', pt: 'Como os vizinhos funcionam' },
+      html: {
+        en: '<ul><li><b>Arriving:</b> a few come at the start, more join as your Luca Arbor grows, and others are found on islets during Starsea Voyages and invited to move in.</li><li><b>Friendship:</b> talk to them, give gifts they like and complete their requests. Higher friendship unlocks their story, new items, recipes and services.</li><li><b>Gifts:</b> each Neighbor has likes and dislikes. A disliked gift, or handing back something they just gave you, upsets them.</li><li><b>Voyages:</b> you can take a Neighbor with you on a Starsea Voyage, and they gather resources based on their skills.</li></ul>',
+        es: '<ul><li><b>Cómo llegan:</b> algunos están desde el principio, otros se unen a medida que crece tu Árbol Luca y otros se encuentran en islotes durante los viajes por el Mar Estelar y se les invita a mudarse.</li><li><b>Amistad:</b> habla con ellos, hazles regalos que les gusten y cumple sus encargos. Con más amistad desbloqueas su historia, objetos nuevos, recetas y servicios.</li><li><b>Regalos:</b> cada vecino tiene gustos y manías. Un regalo que no le gusta, o devolverle algo que te acaba de dar, le molesta.</li><li><b>Viajes:</b> puedes llevar a un vecino en los viajes por el Mar Estelar, y recoge recursos según sus habilidades.</li></ul>',
+        pt: '<ul><li><b>Como chegam:</b> alguns estão desde o começo, outros chegam conforme sua Árvore Luca cresce e outros são encontrados em ilhotas nas viagens pelo Mar Estelar e convidados a se mudar.</li><li><b>Amizade:</b> converse com eles, dê presentes de que gostem e cumpra os pedidos deles. Com mais amizade você desbloqueia a história deles, novos itens, receitas e serviços.</li><li><b>Presentes:</b> cada vizinho tem gostos e manias. Um presente de que não gosta, ou devolver algo que ele acabou de te dar, o deixa chateado.</li><li><b>Viagens:</b> você pode levar um vizinho nas viagens pelo Mar Estelar, e ele coleta recursos de acordo com suas habilidades.</li></ul>',
       },
     },
     {
