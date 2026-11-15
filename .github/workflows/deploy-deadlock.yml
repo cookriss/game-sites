@@ -16,6 +16,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      HAS_CF: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -36,11 +40,7 @@ jobs:
           ADSENSE_CLIENT: ${{ vars.ADSENSE_CLIENT }}
           CF_ANALYTICS_TOKEN: ${{ vars.DEADLOCK_CF_ANALYTICS_TOKEN }}
       - name: Deploy to Cloudflare Pages
-        if: ${{ env.CLOUDFLARE_API_TOKEN != '' }}
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy sites/deadlock/dist --project-name=deadlock-meta --branch=main
+        if: env.HAS_CF == 'true'
+        run: |
+          npx --yes wrangler@4 pages project create deadlock-meta --production-branch=main || true
+          npx --yes wrangler@4 pages deploy sites/deadlock/dist --project-name=deadlock-meta --branch=main
