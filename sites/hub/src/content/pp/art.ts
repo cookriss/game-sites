@@ -43,6 +43,8 @@ export function avatar(name: string, species?: Species): string {
   return `<svg class="avatar" viewBox="0 0 100 100" role="img" aria-label="${name}"><circle cx="50" cy="50" r="50" fill="${bg}"/>${inner}</svg>`;
 }
 
+import { PP_IMAGES } from './images';
+
 /** Category icons for the database cards and headers. */
 export const ICONS: Record<string, string> = {
   neighbors: '<circle cx="32" cy="34" r="20" fill="#d9734a"/><path d="M14 22l4-12 10 8zM50 22l-4-12-10 8z" fill="#c4562f"/><ellipse cx="24" cy="38" rx="7" ry="5" fill="#fff3e6"/><ellipse cx="40" cy="38" rx="7" ry="5" fill="#fff3e6"/><circle cx="25" cy="32" r="3" fill="#3b3561"/><circle cx="39" cy="32" r="3" fill="#3b3561"/><ellipse cx="32" cy="40" rx="3" ry="2" fill="#3b3561"/>',
@@ -57,4 +59,6 @@ export const ICONS: Record<string, string> = {
   furniture: '<rect x="12" y="28" width="40" height="14" rx="5" fill="#a99cf0"/><rect x="16" y="18" width="32" height="14" rx="5" fill="#c3b8ff"/><path d="M16 42v6M48 42v6" stroke="#5a4bc4" stroke-width="3" stroke-linecap="round"/>',
   clothing: '<path d="M22 12l10 6 10-6 12 8-6 9-4-3v24H20V26l-4 3-6-9z" fill="#9fd8b8"/><path d="M28 16q4 6 8 0" stroke="#5a8f74" stroke-width="2" fill="none"/>',
 };
-export const icon = (id: string, size = 40) => `<svg class="cat-icon" viewBox="0 0 64 64" width="${size}" height="${size}" aria-hidden="true">${ICONS[id] ?? ''}</svg>`;
+export const icon = (id: string, size = 40) => PP_IMAGES[id]
+  ? `<img class="cat-icon" src="${PP_IMAGES[id]}" width="${size}" height="${size}" alt="" loading="lazy">`
+  : `<svg class="cat-icon" viewBox="0 0 64 64" width="${size}" height="${size}" aria-hidden="true">${ICONS[id] ?? ''}</svg>`;

@@ -6,9 +6,9 @@ import { icon } from '../content/pp/art';
 interface Props { table: DbTable; lang: Lang; release?: string; backHref: string }
 const { table, lang, release, backHref } = Astro.props;
 const S = {
-  en: { search: 'Search', all: 'All', results: 'results', soon: 'Coming on launch day', soonP: 'This database will be filled from the live game as soon as Petit Planet launches. Here is what it will include:', back: 'All databases', none: 'No matches' },
-  es: { search: 'Buscar', all: 'Todos', results: 'resultados', soon: 'Disponible el día del lanzamiento', soonP: 'Rellenaremos esta base de datos con el juego real en cuanto salga Petit Planet. Esto es lo que incluirá:', back: 'Todas las bases de datos', none: 'Sin resultados' },
-  pt: { search: 'Buscar', all: 'Todos', results: 'resultados', soon: 'Disponível no dia do lançamento', soonP: 'Vamos preencher este banco de dados com o jogo real assim que Petit Planet for lançado. Isto é o que ele vai incluir:', back: 'Todos os bancos de dados', none: 'Nenhum resultado' },
+  en: { search: 'Search', all: 'All', results: 'results', soon: 'Coming on launch day', soonP: 'This list will be filled from the live game as soon as Petit Planet launches. Here is what it will include:', back: 'All lists', none: 'No matches' },
+  es: { search: 'Buscar', all: 'Todos', results: 'resultados', soon: 'Disponible el día del lanzamiento', soonP: 'Rellenaremos esta lista con el juego real en cuanto salga Petit Planet. Esto es lo que incluirá:', back: 'Todas las listas', none: 'Sin resultados' },
+  pt: { search: 'Buscar', all: 'Todos', results: 'resultados', soon: 'Disponível no dia do lançamento', soonP: 'Vamos preencher esta lista com o jogo real assim que Petit Planet for lançado. Isto é o que ele vai incluir:', back: 'Todas as listas', none: 'Nenhum resultado' },
 }[lang];
 const text = (v: Cell | undefined) => (v === undefined ? '' : typeof v === 'object' ? v[lang] : String(v));
 const empty = table.rows.length === 0;
@@ -46,7 +46,7 @@ const fmtRelease = release ? new Intl.DateTimeFormat({ en: 'en-GB', es: 'es-ES',
         <tbody>
           {table.rows.map((r) => (
             <tr {...Object.fromEntries(table.columns.filter((c) => c.filter).map((c) => [`data-${c.key}`, text(r[c.key])]))}>
-              {table.columns.map((c, i) => <td class:list={{ num: c.num }} data-v={text(r[c.key])}>{i === 0 ? <b>{text(r[c.key])}</b> : text(r[c.key])}</td>)}
+              {table.columns.map((c, i) => <td class:list={{ num: c.num }} data-v={text(r[c.key])}>{i === 0 ? <span class="nm">{typeof r.img === 'string' && <img src={r.img} alt="" width="32" height="32" loading="lazy" />}<b>{text(r[c.key])}</b></span> : text(r[c.key])}</td>)}
             </tr>
           ))}
         </tbody>
@@ -99,6 +99,8 @@ const fmtRelease = release ? new Intl.DateTimeFormat({ en: 'en-GB', es: 'es-ES',
   .db-tools input { flex: 1 1 200px; }
   .db td, .db th { text-align: left; white-space: normal; }
   .db .num { text-align: right; }
+  .nm { display: inline-flex; gap: 8px; align-items: center; }
+  .nm img { border-radius: 8px; }
   .db th button { all: unset; cursor: pointer; }
   .db th button::after { content: " ↕"; opacity: .4; }
   @media (max-width: 560px) { .db-soon { flex-direction: column; gap: 8px; } }

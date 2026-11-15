@@ -12,7 +12,7 @@ export function getStaticPaths() {
 const { table } = Astro.props as { table: DbTable };
 const c = ctx(Astro.params.lang);
 const empty = table.rows.length === 0;
-const DB = { en: 'Database', es: 'Base de datos', pt: 'Banco de dados' };
+const DB = { en: 'Lists', es: 'Listas', pt: 'Listas' };
 const h1 = { en: `Petit Planet ${table.name.en.toLowerCase()}`, es: `${table.name.es} de Petit Planet`, pt: `${table.name.pt} de Petit Planet` };
 const page: GamePageContent = {
   slug: 'petit-planet', path: `/petit-planet/database/${table.id}`, parent: { path: '/petit-planet/database', label: DB }, crumb: table.name,

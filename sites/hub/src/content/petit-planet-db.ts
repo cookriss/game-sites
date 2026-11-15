@@ -4,6 +4,7 @@ import type { L } from './types';
  * Petit Planet databases. Every table has its page and template ready; a table with no rows shows a
  * "coming soon" state, is noindex and stays out of the sitemap. Fill rows from the live game
  * (from 4 December 2026): cell values are plain text, a number, or per-language text.
+ * A row may also have `img` (path under /img/petit-planet/) to show a thumbnail next to its name.
  */
 export interface DbColumn {
   key: string;

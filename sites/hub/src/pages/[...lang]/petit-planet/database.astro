@@ -11,11 +11,11 @@ const { lang, L } = c;
 const soon = { en: 'Coming soon', es: 'Próximamente', pt: 'Em breve' }[lang];
 const entries = { en: 'entries', es: 'entradas', pt: 'itens' }[lang];
 const page: GamePageContent = {
-  slug: 'petit-planet', path: '/petit-planet/database', crumb: { en: 'Database', es: 'Base de datos', pt: 'Banco de dados' },
+  slug: 'petit-planet', path: '/petit-planet/database', crumb: { en: 'All lists', es: 'Todas las listas', pt: 'Todas as listas' },
   name: 'Petit Planet', updated: '2026-11-15', noindex: PP_LIVE_TABLES.length === 0,
-  title: { en: 'Petit Planet Database: Recipes, Fish, Bugs, Crops, Furniture and More', es: 'Base de datos de Petit Planet: recetas, peces, insectos, cultivos, muebles y más', pt: 'Banco de dados de Petit Planet: receitas, peixes, insetos, cultivos, móveis e mais' },
+  title: { en: 'Petit Planet Lists: Recipes, Fish, Bugs, Crops, Furniture and More', es: 'Listas de Petit Planet: recetas, peces, insectos, cultivos, muebles y más', pt: 'Listas de Petit Planet: receitas, peixes, insetos, cultivos, móveis e mais' },
   description: { en: 'Every Petit Planet recipe, fish, bug, crop, flower, material, furniture item, outfit and Neighbor gift, with search and filters.', es: 'Todas las recetas, peces, insectos, cultivos, flores, materiales, muebles, ropa y regalos de Petit Planet, con buscador y filtros.', pt: 'Todas as receitas, peixes, insetos, cultivos, flores, materiais, móveis, roupas e presentes de Petit Planet, com busca e filtros.' },
-  h1: { en: 'Petit Planet database', es: 'Base de datos de Petit Planet', pt: 'Banco de dados de Petit Planet' },
+  h1: { en: 'All Petit Planet lists', es: 'Todas las listas de Petit Planet', pt: 'Todas as listas de Petit Planet' },
   lede: { en: 'Everything you can collect, cook, grow and give, with search and filters. The tables fill up from launch day, 4 December 2026.', es: 'Todo lo que puedes coleccionar, cocinar, cultivar y regalar, con buscador y filtros. Las tablas se rellenan desde el día del lanzamiento, el 4 de diciembre de 2026.', pt: 'Tudo o que você pode colecionar, cozinhar, cultivar e presentear, com busca e filtros. As tabelas são preenchidas a partir do dia do lançamento, 4 de dezembro de 2026.' },
   sections: [], sources: [],
 };
@@ -30,6 +30,11 @@ const page: GamePageContent = {
         <span class:list={['tag', { live: t.rows.length > 0 }]}>{t.rows.length > 0 ? `${t.rows.length} ${entries}` : soon}</span>
       </a>
     ))}
+    <a class="db-card" href={L('/petit-planet/betas')}>
+      <Fragment set:html={icon('flowers', 52)} />
+      <b>{({ en: 'Beta tests', es: 'Betas', pt: 'Betas' })[lang]}</b>
+      <small>{({ en: 'What the three closed betas added.', es: 'Qué añadió cada una de las tres betas cerradas.', pt: 'O que cada um dos três betas fechados trouxe.' })[lang]}</small>
+    </a>
   </div>
 </GamePage>
 <style>
