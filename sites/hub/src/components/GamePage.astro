@@ -4,6 +4,7 @@ import type { GamePageContent } from '../content/types';
 import { BUILD_DATE, type Ctx } from '../lib/site';
 import { GAMES } from '../games';
 import PetitPlanetTheme from '../themes/PetitPlanetTheme.astro';
+import AnantaTheme from '../themes/AnantaTheme.astro';
 import { SECTION_NAV } from '../content/nav';
 interface Props { c: Ctx; page: GamePageContent }
 const { c, page } = Astro.props;
@@ -14,6 +15,7 @@ const S = {
   pt: { home: 'Início', updated: 'Atualizado', facts: 'Dados principais', faq: 'Perguntas frequentes', sources: 'Fontes', launch: 'Lançamento' },
 }[lang];
 const pp = page.slug === 'petit-planet';
+const an = page.slug === 'ananta';
 const game = GAMES.find((g) => g.slug === page.slug);
 const fmt = (iso: string) => new Intl.DateTimeFormat(c.locale.lang, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(iso + 'T00:00:00Z'));
 const days = page.release ? Math.ceil((Date.parse(page.release + 'T00:00:00Z') - BUILD_DATE.getTime()) / 86400000) : undefined;
@@ -36,15 +38,13 @@ const jsonLd = [
   { '@context': 'https://schema.org', '@type': 'Article', headline: page.h1[lang], dateModified: page.updated, inLanguage: c.locale.lang, mainEntityOfPage: url },
 ].filter(Boolean) as object[];
 ---
-<Layout c={c} path={path} title={page.title[lang]} description={page.description[lang]} jsonLd={jsonLd}>
+<Layout c={c} section={{ brand: { label: page.name, href: L('/' + page.slug) }, nav: subnav.map((n) => ({ href: L(n.path), label: n.label[lang] })) }} path={path} title={page.title[lang]} description={page.description[lang]} jsonLd={jsonLd}>
   {pp && <PetitPlanetTheme slot="head" />}
-  <nav class="crumbs small muted"><a href={L('/')}>{S.home}</a> › {isSub ? <a href={L('/' + page.slug)}>{page.name}</a> : page.name}{isSub && <> › {page.crumb?.[lang]}</>}</nav>
-  <article class:list={["gp", { "theme-pp": pp }]} style={`--g:${pp ? '#ff8fab' : game?.color ?? 'var(--accent)'}`}>
-    {subnav.length > 0 && (
-      <nav class="subnav" aria-label={page.name}>
-        {subnav.map((n) => <a href={L(n.path)} aria-current={n.path === path ? 'page' : undefined}>{n.label[lang]}</a>)}
-      </nav>
-    )}
+  {an && <AnantaTheme slot="head" />}
+  {pp && <svg slot="brand-icon" class="brand-icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="18" r="10" fill="#9fd8b8" /><ellipse cx="16" cy="18" rx="15" ry="3.5" fill="none" stroke="#ffc6d6" stroke-width="2" transform="rotate(-12 16 18)" /><path d="M16 8V4" stroke="#7a5c3e" stroke-width="2" stroke-linecap="round" /><path d="M16 5c-3-3-6-1-6 1 3 1 5 0 6-1zM16 5c2-3 6-2 6 0-3 1-5 1-6 0z" fill="#8fd17a" /></svg>}
+  {an && <svg slot="brand-icon" class="brand-icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 28V14h5v14M11 28V6h6v22M19 28V11h5v17M26 28V17h3v11" fill="none" stroke="#ff4fa3" stroke-width="2.2" stroke-linejoin="round" /><path d="M2 28h28" stroke="#3fe3ff" stroke-width="2.2" stroke-linecap="round" /></svg>}
+  {isSub && <nav class="crumbs small muted"><a href={L('/' + page.slug)}>{page.name}</a> › {page.crumb?.[lang]}</nav>}
+  <article class:list={["gp", { "theme-pp": pp, "theme-an": an }]} style={`--g:${pp ? '#ff8fab' : an ? '#ff4fa3' : game?.color ?? 'var(--accent)'}`}>
     {pp && !isSub && (
       <svg class="pp-art" viewBox="0 0 120 120" aria-hidden="true">
         <circle cx="60" cy="72" r="38" fill="#9fd8b8" /><path d="M24 80a38 38 0 0 0 72 0c-12 8-60 8-72 0z" fill="#7cc4a0" />
@@ -76,10 +76,7 @@ const jsonLd = [
 </Layout>
 <style>
   .pp-art { width: 96px; height: 96px; float: right; margin: 0 0 8px 12px; }
-  .subnav { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 16px; }
-  .subnav a { padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--text); font-size: .9rem; font-weight: 600; }
-  .subnav a[aria-current="page"] { background: var(--g); border-color: var(--g); color: #fff; }
-  .subnav a:hover { text-decoration: none; border-color: var(--g); }
+  .brand-icon { width: 26px; height: 26px; vertical-align: -7px; margin-right: 7px; }
   .gp :global(.cards) { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); margin: 10px 0; }
   .gp :global(.ncard) { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; }
   .gp :global(.ncard h3) { margin: 0 0 2px; font-size: 1.05rem; }

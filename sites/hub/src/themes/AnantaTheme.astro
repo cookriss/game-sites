@@ -1,0 +1,33 @@
+---
+/** Ananta look: neon city at night. Original CSS and SVG only, no official art. */
+---
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&display=swap" />
+<style is:global>
+  :root:has(.theme-an) {
+    --bg: #0b0918; --bg2: #120f26e6; --panel: #17132e; --line: #2c2650; --text: #f1ecff; --muted: #a9a2cc;
+    --link: #3fe3ff; --accent: #ff4fa3; --radius: 6px;
+    color-scheme: dark;
+  }
+  :root:has(.theme-an) body {
+    background:
+      linear-gradient(180deg, #ff4fa31f 0, transparent 280px),
+      repeating-linear-gradient(90deg, #ffffff06 0 1px, transparent 1px 48px),
+      repeating-linear-gradient(0deg, #ffffff06 0 1px, transparent 1px 48px),
+      #0b0918;
+  }
+  :root:has(.theme-an) .site-header { background: #0b0918e6; backdrop-filter: blur(8px); border-bottom: 1px solid #ff4fa355; }
+  :root:has(.theme-an) .brand { color: #fff; font-family: "Chakra Petch", Inter, sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: 1.2rem; text-shadow: 0 0 12px #ff4fa3aa; }
+  :root:has(.theme-an) h1, :root:has(.theme-an) h2 { font-family: "Chakra Petch", Inter, sans-serif; letter-spacing: .02em; }
+  :root:has(.theme-an) h1 { text-shadow: 0 0 18px #ff4fa366; }
+  :root:has(.theme-an) h2 { color: #3fe3ff; text-transform: uppercase; font-size: 1.1rem; letter-spacing: .08em; }
+  :root:has(.theme-an) .gp section { background: #17132ecc; border: 1px solid #2c2650; border-left: 3px solid #ff4fa3; border-radius: 6px; padding: 2px 18px 10px; margin: 16px 0; }
+  :root:has(.theme-an) .gp section h2 { margin-top: 14px; }
+  :root:has(.theme-an) b { color: #ffd1ea; }
+  :root:has(.theme-an) th { background: #120f26; color: #3fe3ff; }
+  :root:has(.theme-an) .countdown { background: linear-gradient(90deg, #ff4fa322, #3fe3ff18); border: 1px solid #ff4fa3; border-radius: 6px; box-shadow: 0 0 22px #ff4fa333; }
+  :root:has(.theme-an) .countdown b { color: #ff4fa3; }
+  :root:has(.theme-an) .faq { background: #17132e; border-color: #2c2650; border-radius: 6px; }
+  :root:has(.theme-an) .site-footer { background: transparent; border-top-color: #2c2650; }
+</style>

@@ -43,4 +43,6 @@ export interface LayoutStrings {
   legal?: NavItem[];
   /** Label of the "change cookie consent" footer link, shown when ads are on */
   cookieSettings?: string;
+  /** Footer credit for network sites, e.g. { label: 'A Partida site', href: '/' } */
+  network?: NavItem;
 }

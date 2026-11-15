@@ -20,13 +20,20 @@ interface Props {
   alternateLocales?: Locale[];
   /** Keep the page out of search results (404, utility pages) */
   noindex?: boolean;
+  /** Header brand; defaults to the site name linking to the home page (game sections use their own) */
+  brand?: NavItem;
 }
-const { site, locale, path, title, description, nav, strings, jsonLd, ogImage, localized = true, alternateLocales, noindex = false } = Astro.props;
+const { site, locale, path, title, description, nav, strings, jsonLd, ogImage, localized = true, alternateLocales, noindex = false, brand } = Astro.props;
 const locs = alternateLocales ?? site.locales;
 const abs = (p: string) => site.url + p;
 const canonical = abs(localePath(locale, path));
 const alternates = localized && locs.length > 1 ? locs.map((l) => ({ lang: l.lang, href: abs(localePath(l, path)) })) : [];
 const current = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+const exact = nav.some((n) => n.href.replace(/\/$/, '') === current);
+const isCurrent = (href: string) => {
+  const h = href.replace(/\/$/, '');
+  return exact ? h === current : h !== localePath(locale, '/').replace(/\/$/, '') && current.startsWith(h);
+};
 const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 ---
 <!doctype html>
@@ -70,9 +77,9 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 <body>
   <header class="site-header">
     <div class="wrap">
-      <a class="brand" href={localePath(locale, '/')}>{site.name}</a>
+      <a class="brand" href={brand?.href ?? localePath(locale, '/')}><slot name="brand-icon" />{brand?.label ?? site.name}</a>
       <nav class="nav" aria-label="Main">
-        {nav.map((n) => <a href={n.href} aria-current={current === n.href.replace(/\/$/, '') || (n.href !== localePath(locale, '/') && current.startsWith(n.href)) ? 'page' : undefined}>{n.label}</a>)}
+        {nav.map((n) => <a href={n.href} aria-current={isCurrent(n.href) ? 'page' : undefined}>{n.label}</a>)}
       </nav>
       {localized && locs.length > 1 && (
         <label class="lang">
@@ -89,6 +96,7 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
   </main>
   <footer class="site-footer">
     <div class="wrap">
+      {strings.network && <p class="network"><a href={strings.network.href}>{strings.network.label}</a></p>}
       {strings.updated && <p>{strings.updated}</p>}
       <p>{strings.disclaimer}</p>
       <p class="links">

@@ -1,13 +1,20 @@
 ---
 import BaseLayout from '@gamesites/core/layouts/BaseLayout.astro';
 import AdSlot from '@gamesites/core/components/AdSlot.astro';
-import type { Locale } from '@gamesites/core/lib/types';
+import type { Locale, NavItem } from '@gamesites/core/lib/types';
 import type { Ctx } from '../lib/site';
-interface Props { c: Ctx; path: string; title: string; description: string; jsonLd?: object | object[]; ogImage?: string; alternateLocales?: Locale[]; ad?: boolean; noindex?: boolean; localized?: boolean }
-const { c, path, title, description, jsonLd, ogImage, alternateLocales, ad = true, noindex = false, localized = true } = Astro.props;
+interface Props {
+  c: Ctx; path: string; title: string; description: string; jsonLd?: object | object[]; ogImage?: string; alternateLocales?: Locale[]; ad?: boolean; noindex?: boolean; localized?: boolean;
+  /** Game sections: own brand and menu in the header, hub credit moves to the footer */
+  section?: { brand: NavItem; nav: NavItem[] };
+}
+const { c, path, title, description, jsonLd, ogImage, alternateLocales, ad = true, noindex = false, localized = true, section } = Astro.props;
+const nav = section ? section.nav : c.nav;
+const strings = section ? { ...c.strings, network: { href: c.L('/'), label: c.t('network_credit', { name: c.site.name }) } } : c.strings;
 ---
-<BaseLayout site={c.site} locale={c.locale} path={path} title={title} description={description} nav={c.nav} strings={c.strings} jsonLd={jsonLd} ogImage={ogImage} alternateLocales={alternateLocales} noindex={noindex} localized={localized}>
+<BaseLayout site={c.site} locale={c.locale} path={path} title={title} description={description} nav={nav} strings={strings} brand={section?.brand} jsonLd={jsonLd} ogImage={ogImage} alternateLocales={alternateLocales} noindex={noindex} localized={localized}>
   <slot name="head" slot="head" />
+  <slot name="brand-icon" slot="brand-icon" />
   <slot />
   {ad && <AdSlot site={c.site} />}
 </BaseLayout>
