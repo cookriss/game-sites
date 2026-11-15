@@ -14,4 +14,4 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build -w sites/deadlock
+      - run: npm run build --workspaces --if-present

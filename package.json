@@ -1,9 +1,9 @@
 {
   "name": "game-sites",
   "private": true,
-  "workspaces": ["packages/*", "sites/*"],
-  "scripts": {
-    "dev:deadlock": "npm run dev -w sites/deadlock",
-    "build:deadlock": "npm run build -w sites/deadlock"
-  }
+  "workspaces": [
+    "packages/*",
+    "sites/*"
+  ],
+  "scripts": {}
 }
