@@ -1,4 +1,5 @@
 import { getImage } from 'astro:assets';
+import { legalLinks, cookieSettingsLabel } from '@gamesites/core/legal/index';
 import { SITE } from '../../site.config';
 import { localePath, localeFromParam } from '@gamesites/core/lib/i18n';
 import type { Locale } from '@gamesites/core/lib/types';
@@ -96,6 +97,7 @@ export async function ctx(langParam: string | undefined) {
     ],
     strings: {
       disclaimer: t('disclaimer'), about: t('about'), privacy: t('privacy'), language: t('language'),
+      legal: legalLinks(SITE, locale), cookieSettings: cookieSettingsLabel(locale),
       updated: t('updated', { count: compact(matches, locale.lang), days: WINDOW_DAYS, source: data.attribution.label, date: fmtDate }),
     },
   };

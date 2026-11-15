@@ -1,0 +1,18 @@
+---
+import type { SiteConfig } from '../lib/types';
+import { legalDoc, LEGAL_LABELS, LEGAL_UPDATED, type LegalDocId, type LegalLang } from './docs';
+interface Props { site: SiteConfig; doc: LegalDocId; lang: LegalLang }
+const { site, doc, lang } = Astro.props;
+const d = legalDoc(doc, lang, site);
+const updated = new Date(LEGAL_UPDATED + 'T00:00:00Z').toLocaleDateString(lang, { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+---
+<article class="legal">
+  <h1>{d.title}</h1>
+  <p class="muted small">{LEGAL_LABELS[lang].updated}: {updated}</p>
+  {d.sections.map((s) => (
+    <section>
+      {s.h && <h2>{s.h}</h2>}
+      {s.html.map((h) => (h.startsWith('<') ? <Fragment set:html={h} /> : <p set:html={h} />))}
+    </section>
+  ))}
+</article>

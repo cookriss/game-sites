@@ -38,3 +38,11 @@ Each site is a Cloudflare Pages project connected to this GitHub repo (no API to
 - Build watch paths: `sites/<game>/*`, `packages/*`, `package-lock.json`, `.last-refresh`.
 
 Cloudflare rebuilds on every push to `main`. `.github/workflows/daily-refresh.yml` pushes a timestamp commit once a day so stats stay fresh.
+
+## Legal and consent (all sites)
+
+`packages/core/src/legal` holds the legal notice (LSSI), privacy policy (GDPR), cookie policy and terms, in English and Spanish. A site gets them with one route file, `src/pages/[...lang]/[doc].astro` (copy it from `sites/deadlock`), and `owner: OWNER` plus `dataSource` in its `site.config.ts`.
+
+Owner details for the legal notice come from build variables, so they stay out of this public repo. Set them in each Cloudflare Pages project (Settings → Variables): `OWNER_NAME`, `OWNER_TAX_ID`, `OWNER_ADDRESS`, `OWNER_EMAIL`.
+
+Ads: set `ADSENSE_CLIENT=ca-pub-…` in the Pages project. That turns on the AdSense script, Google Consent Mode v2 (denied by default in the EEA, UK and CH), `/ads.txt`, and a "Cookie settings" footer link. Consent itself is Google's certified CMP: in AdSense, Privacy & messaging → European regulations → create a message for the site. Do not add a home-made cookie banner, since AdSense requires a Google-certified CMP in Europe.

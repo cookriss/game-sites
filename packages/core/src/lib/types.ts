@@ -19,7 +19,13 @@ export interface SiteConfig {
   locales: Locale[];
   /** Accent color used for theme-color and highlights */
   accent: string;
+  /** Owner shown in the legal notice */
+  owner?: Owner;
+  /** Third parties the visitor's browser talks to directly (disclosed in the privacy policy) */
+  dataSource?: { label: string; url: string };
 }
+
+export interface Owner { name: string; taxId: string; address: string; email: string }
 
 export interface NavItem { href: string; label: string }
 
@@ -29,4 +35,8 @@ export interface LayoutStrings {
   privacy: string;
   language: string;
   updated?: string;
+  /** Footer legal links (legal notice, privacy, cookies, terms) */
+  legal?: NavItem[];
+  /** Label of the "change cookie consent" footer link, shown when ads are on */
+  cookieSettings?: string;
 }

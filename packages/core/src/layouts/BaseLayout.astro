@@ -16,11 +16,16 @@ interface Props {
   ogImage?: string;
   /** Set false for pages that only exist in the default locale */
   localized?: boolean;
+  /** Limit hreflang alternates and the language switcher to these locales */
+  alternateLocales?: Locale[];
+  /** Keep the page out of search results (404, utility pages) */
+  noindex?: boolean;
 }
-const { site, locale, path, title, description, nav, strings, jsonLd, ogImage, localized = true } = Astro.props;
+const { site, locale, path, title, description, nav, strings, jsonLd, ogImage, localized = true, alternateLocales, noindex = false } = Astro.props;
+const locs = alternateLocales ?? site.locales;
 const abs = (p: string) => site.url + p;
 const canonical = abs(localePath(locale, path));
-const alternates = localized ? site.locales.map((l) => ({ lang: l.lang, href: abs(localePath(l, path)) })) : [];
+const alternates = localized && locs.length > 1 ? locs.map((l) => ({ lang: l.lang, href: abs(localePath(l, path)) })) : [];
 const current = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
 const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 ---
@@ -33,7 +38,8 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
   {alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
-  {localized && <link rel="alternate" hreflang="x-default" href={abs(localePath(site.locales[0], path))} />}
+  {alternates.length > 0 && <link rel="alternate" hreflang="x-default" href={abs(localePath(locs[0], path))} />}
+  {noindex && <meta name="robots" content="noindex" />}
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <meta name="theme-color" content="#0d0f13" />
   <meta property="og:type" content="website" />
@@ -46,6 +52,17 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
   <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
   <style set:html={`:root{--site-accent:${site.accent}}`}></style>
   {ld.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o)} />)}
+  {site.adsenseClient && (
+    <script is:inline>
+      // Google Consent Mode v2: deny ad storage by default in the EEA, UK and
+      // Switzerland until Google's certified CMP (AdSense Privacy & messaging) records consent.
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied', wait_for_update: 500,
+        region: ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH'] });
+      gtag('consent', 'default', { ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted', analytics_storage: 'granted' });
+    </script>
+  )}
   {site.adsenseClient && <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${site.adsenseClient}`} crossorigin="anonymous"></script>}
   {site.cfAnalyticsToken && <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: site.cfAnalyticsToken })}></script>}
   <slot name="head" />
@@ -57,11 +74,11 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
       <nav class="nav" aria-label="Main">
         {nav.map((n) => <a href={n.href} aria-current={current === n.href.replace(/\/$/, '') || (n.href !== localePath(locale, '/') && current.startsWith(n.href)) ? 'page' : undefined}>{n.label}</a>)}
       </nav>
-      {localized && site.locales.length > 1 && (
+      {localized && locs.length > 1 && (
         <label class="lang">
           <span class="sr" style="position:absolute;left:-9999px">{strings.language}</span>
           <select onchange="location.href=this.value" aria-label={strings.language}>
-            {site.locales.map((l) => <option value={localePath(l, path)} selected={l.prefix === locale.prefix}>{l.label}</option>)}
+            {locs.map((l) => <option value={localePath(l, path)} selected={l.prefix === locale.prefix}>{l.label}</option>)}
           </select>
         </label>
       )}
@@ -74,8 +91,20 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     <div class="wrap">
       {strings.updated && <p>{strings.updated}</p>}
       <p>{strings.disclaimer}</p>
-      <p><a href="/about">{strings.about}</a> · <a href="/privacy">{strings.privacy}</a></p>
+      <p class="links">
+        <a href="/about">{strings.about}</a>
+        {(strings.legal ?? [{ href: '/privacy', label: strings.privacy }]).map((l) => <> · <a href={l.href}>{l.label}</a></>)}
+        {site.adsenseClient && strings.cookieSettings && <> · <button type="button" class="linklike" id="cookie-settings">{strings.cookieSettings}</button></>}
+      </p>
     </div>
   </footer>
+  {site.adsenseClient && (
+    <script is:inline>
+      document.getElementById('cookie-settings')?.addEventListener('click', function () {
+        window.googlefc = window.googlefc || {}; googlefc.callbackQueue = googlefc.callbackQueue || [];
+        googlefc.callbackQueue.push(function () { googlefc.showRevocationMessage(); });
+      });
+    </script>
+  )}
 </body>
 </html>

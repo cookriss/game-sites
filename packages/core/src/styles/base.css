@@ -60,3 +60,12 @@ tr:last-child td { border-bottom: 0; }
   .hide-sm { display: none; }
   th, td { padding: 7px 8px; }
 }
+
+/* legal pages */
+.legal { max-width: 75ch; }
+.legal p, .legal li { line-height: 1.65; }
+.legal .table-wrap { margin: 10px 0; }
+.legal-table th, .legal-table td { text-align: left; white-space: normal; }
+.site-footer .links a { white-space: nowrap; }
+.linklike { background: none; border: 0; padding: 0; color: var(--link); font: inherit; cursor: pointer; }
+.linklike:hover { text-decoration: underline; }

@@ -1,4 +1,5 @@
 import type { SiteConfig } from '@gamesites/core/lib/types';
+import { OWNER } from '@gamesites/core/legal/owner';
 
 export const SITE: SiteConfig & { apiLang: Record<string, string> } = {
   name: 'Deadlock Meta',
@@ -8,6 +9,8 @@ export const SITE: SiteConfig & { apiLang: Record<string, string> } = {
   accent: '#e0b341',
   adsenseClient: process.env.ADSENSE_CLIENT || '',
   cfAnalyticsToken: process.env.CF_ANALYTICS_TOKEN || '',
+  owner: OWNER,
+  dataSource: { label: 'deadlock-api.com', url: 'https://deadlock-api.com' },
   locales: [
     { prefix: '', lang: 'en', label: 'English' },
     { prefix: 'es', lang: 'es', label: 'Español' },
