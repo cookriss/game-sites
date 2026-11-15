@@ -1,14 +1,27 @@
 ---
 import Layout from '../../components/Layout.astro';
 import { langParams } from '@gamesites/core/lib/i18n';
+import { legalLocaleFor } from '@gamesites/core/legal/index';
+import { localePath } from '@gamesites/core/lib/i18n';
 import { ctx, SITE } from '../../lib/site';
+import { ABOUT } from '../../content/about';
 export function getStaticPaths() { return langParams(SITE); }
 const c = ctx(Astro.params.lang);
-const { t } = c;
+const { lang } = c;
+const o = SITE.owner;
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const legalBase = localePath(legalLocaleFor(SITE, c.locale), '/').replace(/\/$/, '');
+const contact = o?.email ? `<a href="mailto:${esc(o.email)}">${esc(o.email)}</a>` : { en: 'the email address in the legal notice', es: 'el correo del aviso legal', pt: 'o e-mail do aviso legal' }[lang];
+const ownerPhrase = o?.name ? { en: `run by ${esc(o.name)}`, es: `creada por ${esc(o.name)}`, pt: `criado por ${esc(o.name)}` }[lang] : '';
+const fill = (s: string) => s.replaceAll('{name}', esc(SITE.name)).replaceAll('{contact}', contact).replaceAll(' {owner}', ownerPhrase ? ' ' + ownerPhrase : '').replaceAll('{L}', legalBase);
+const jsonLd = { '@context': 'https://schema.org', '@type': 'AboutPage', name: fill(ABOUT.h1[lang]), url: SITE.url + c.L('/about'), inLanguage: c.locale.lang,
+  mainEntity: { '@type': 'Organization', name: SITE.name, url: SITE.url, ...(o?.email ? { email: o.email } : {}) } };
 ---
-<Layout c={c} path="/about" title={`${t('about_title')} | ${SITE.name}`} description={t('about_desc')} ad={false}>
-  <h1>{t('about_title')}</h1>
-  <p>{t('about_p1')}</p>
-  <p>{t('about_p2')}</p>
-  <p class="muted">{t('disclaimer')}</p>
+<Layout c={c} path="/about" title={fill(ABOUT.title[lang])} description={fill(ABOUT.description[lang])} jsonLd={jsonLd} ad={false}>
+  <article class="legal about">
+    <h1>{fill(ABOUT.h1[lang])}</h1>
+    <p class="lede">{fill(ABOUT.lede[lang])}</p>
+    {ABOUT.sections.map((s) => (<section><h2>{s.h[lang]}</h2><Fragment set:html={fill(s.html[lang])} /></section>))}
+    <p class="muted small">{c.t('disclaimer')}</p>
+  </article>
 </Layout>

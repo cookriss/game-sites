@@ -5,7 +5,7 @@ export * from './docs';
 
 /** Locales that have their own legal pages (others use English). */
 export const legalLocales = (site: SiteConfig): Locale[] =>
-  site.locales.filter((l) => (LEGAL_LANGS as string[]).includes(l.lang));
+  site.locales.filter((l) => LEGAL_LANGS.includes(legalLang(l.lang)) && (LEGAL_LANGS as string[]).includes(l.lang.split('-')[0]));
 
 /** The locale whose legal pages a visitor in `locale` should see. */
 export const legalLocaleFor = (site: SiteConfig, locale: Locale): Locale =>
