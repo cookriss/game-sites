@@ -29,10 +29,12 @@ API responses are cached in `sites/deadlock/.cache` for 6 hours to keep local bu
 1. Copy `sites/deadlock` to `sites/<game>`, change `site.config.ts`, the strings in `src/i18n/ui.ts` and the data source.
 2. Copy the workflow and change the folder and the Cloudflare project name.
 
-## Deploy setup (once per GitHub repo)
+## Deploy setup
 
-GitHub repo → Settings → Secrets and variables → Actions:
-- Secrets: `CLOUDFLARE_API_TOKEN` (Cloudflare token with the "Cloudflare Pages: Edit" permission), `CLOUDFLARE_ACCOUNT_ID`.
-- Variables (optional): `DEADLOCK_SITE_URL` (e.g. https://deadlockmeta.gg once the domain exists), `ADSENSE_CLIENT`, `DEADLOCK_CF_ANALYTICS_TOKEN`.
+Each site is a Cloudflare Pages project connected to this GitHub repo (no API tokens):
+- Build command: `npm run build -w sites/<game>`
+- Build output directory: `sites/<game>/dist`
+- Environment variables: `NODE_VERSION=22`, `SITE_URL` (the site's domain), optional `ADSENSE_CLIENT`, `CF_ANALYTICS_TOKEN`.
+- Build watch paths: `sites/<game>/*`, `packages/*`, `package-lock.json`, `.last-refresh`.
 
-Create the Cloudflare Pages project once with: `npx wrangler pages project create deadlock-meta --production-branch=main` (or let the first deploy create it).
+Cloudflare rebuilds on every push to `main`. `.github/workflows/daily-refresh.yml` pushes a timestamp commit once a day so stats stay fresh.
