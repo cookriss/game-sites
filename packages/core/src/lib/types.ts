@@ -19,6 +19,8 @@ export interface SiteConfig {
   locales: Locale[];
   /** Accent color used for theme-color and highlights */
   accent: string;
+  /** Publishers of the covered games, named in the legal notice */
+  publishers?: string[];
   /** Owner shown in the legal notice */
   owner?: Owner;
   /** Third parties the visitor's browser talks to directly (disclosed in the privacy policy) */
@@ -32,6 +34,8 @@ export interface NavItem { href: string; label: string }
 export interface LayoutStrings {
   disclaimer: string;
   about: string;
+  /** Localized link for the About page (defaults to /about) */
+  aboutHref?: string;
   privacy: string;
   language: string;
   updated?: string;

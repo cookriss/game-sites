@@ -35,6 +35,9 @@ export function legalDoc(id: LegalDocId, lang: LegalLang, site: SiteConfig): Leg
   const host = site.url.replace(/^https?:\/\//, '');
   const src = site.dataSource;
   const ownerName = esc(o.name || site.name);
+  const pubList = (site.publishers ?? []).map(esc).join(', ');
+  const pubs = pubList || 'los editores de los juegos que cubre';
+  const pubsEn = pubList || 'the publishers of the games it covers';
   const contact = o.email ? mail(o.email) : (lang === 'es' ? 'el correo indicado en el aviso legal' : 'the email in the legal notice');
   const ownerList = (labels: [string, string, string, string]) =>
     `<ul>${[
@@ -56,7 +59,7 @@ export function legalDoc(id: LegalDocId, lang: LegalLang, site: SiteConfig): Leg
         sections: [
           { h: 'Titular del sitio web', html: [`En cumplimiento del artículo 10 de la Ley 34/2002, de Servicios de la Sociedad de la Información y de Comercio Electrónico (LSSI-CE), se informa de los datos del titular de este sitio web:`, ownerList(['Titular', 'NIF', 'Domicilio', 'Correo electrónico'])] },
           { h: 'Objeto', html: [`${esc(site.name)} es una web de fans gratuita con estadísticas, guías y herramientas sobre ${esc(site.game)}. El acceso es libre y no requiere registro. El sitio se financia con publicidad.`] },
-          { h: 'Relación con el editor del juego', html: [`${esc(site.name)} no está afiliado, patrocinado ni respaldado por Valve Corporation. ${esc(site.game)}, sus nombres, imágenes y demás recursos son marcas y contenidos propiedad de Valve Corporation, y se usan aquí solo con fines informativos.`] },
+          { h: 'Relación con los editores de los juegos', html: [`${esc(site.name)} es una web de fans independiente y no está afiliada, patrocinada ni respaldada por ${pubs}. Los nombres, imágenes y demás recursos de cada juego son marcas y contenidos de sus respectivos propietarios, y se usan aquí solo con fines informativos.`] },
           { h: 'Propiedad intelectual', html: [`El diseño, el código y los textos propios de este sitio pertenecen a su titular. Las estadísticas se calculan a partir de datos públicos de partidas${src ? ` facilitados por <a href="${src.url}" rel="noopener">${esc(src.label)}</a>` : ''}. Puedes citar o enlazar nuestras páginas indicando la fuente.`] },
           { h: 'Responsabilidad', html: ['La información se ofrece tal cual, con fines orientativos, y puede contener errores o no estar actualizada. El titular no se hace responsable de las decisiones tomadas a partir de ella ni del contenido de los sitios de terceros enlazados.'] },
           { h: 'Legislación aplicable', html: ['Este aviso se rige por la legislación española. Para cualquier controversia serán competentes los juzgados y tribunales que correspondan conforme a la normativa de consumidores y usuarios.'] },
@@ -92,7 +95,7 @@ export function legalDoc(id: LegalDocId, lang: LegalLang, site: SiteConfig): Leg
           { h: 'Aceptación', html: [`Al usar ${esc(site.name)} aceptas estos términos. Si no estás de acuerdo, no uses el sitio.`] },
           { h: 'Uso del servicio', html: ['El sitio es gratuito y se ofrece con fines informativos. No está permitido usarlo de forma que perjudique su funcionamiento, por ejemplo descargando páginas de forma masiva y automatizada, ni eludir la publicidad que lo financia mediante técnicas que alteren el sitio.'] },
           { h: 'Exactitud de los datos', html: ['Las estadísticas se calculan automáticamente con datos públicos y pueden contener errores, retrasos o lagunas. No garantizamos su exactitud ni su disponibilidad continua.'] },
-          { h: 'Propiedad intelectual', html: [`Los contenidos del juego pertenecen a Valve Corporation. Los contenidos propios del sitio pertenecen a su titular. Consulta el <a href="legal">aviso legal</a>.`] },
+          { h: 'Propiedad intelectual', html: [`Los contenidos de cada juego pertenecen a sus respectivos propietarios. Los contenidos propios del sitio pertenecen a su titular. Consulta el <a href="legal">aviso legal</a>.`] },
           { h: 'Cambios', html: ['Podemos modificar estos términos y el sitio en cualquier momento. La fecha de la última actualización figura en esta página.'] },
           { h: 'Ley aplicable', html: ['Estos términos se rigen por la legislación española.'] },
         ],
@@ -108,7 +111,7 @@ export function legalDoc(id: LegalDocId, lang: LegalLang, site: SiteConfig): Leg
       sections: [
         { h: 'Website owner', html: ['As required by Spanish Law 34/2002 on Information Society Services (LSSI-CE), article 10, the owner of this website is:', ownerList(['Owner', 'Tax ID', 'Address', 'Email'])] },
         { h: 'Purpose', html: [`${esc(site.name)} is a free fan site with statistics, guides and tools for ${esc(site.game)}. Access is free and needs no account. The site is funded by advertising.`] },
-        { h: 'Relationship with the game publisher', html: [`${esc(site.name)} is not affiliated with, sponsored or endorsed by Valve Corporation. ${esc(site.game)}, its names, images and other assets are trademarks and property of Valve Corporation and are used here for information only.`] },
+        { h: 'Relationship with game publishers', html: [`${esc(site.name)} is an independent fan site and is not affiliated with, sponsored or endorsed by ${pubsEn}. Each game's names, images and other assets are trademarks and property of their respective owners and are used here for information only.`] },
         { h: 'Intellectual property', html: [`The design, code and original text of this site belong to its owner. Statistics are computed from public match data${src ? ` provided by <a href="${src.url}" rel="noopener">${esc(src.label)}</a>` : ''}. You may quote or link to our pages with attribution.`] },
         { h: 'Liability', html: ['Information is provided as is, for guidance only, and may contain errors or be out of date. The owner is not liable for decisions made based on it, nor for the content of linked third-party sites.'] },
         { h: 'Governing law', html: ['This notice is governed by Spanish law.'] },
@@ -144,7 +147,7 @@ export function legalDoc(id: LegalDocId, lang: LegalLang, site: SiteConfig): Leg
         { h: 'Acceptance', html: [`By using ${esc(site.name)} you accept these terms. If you do not agree, please do not use the site.`] },
         { h: 'Use of the service', html: ['The site is free and provided for information. You may not use it in ways that harm its operation, such as mass automated downloading of pages, or tamper with the advertising that funds it.'] },
         { h: 'Accuracy', html: ['Statistics are computed automatically from public data and may contain errors, delays or gaps. We do not guarantee their accuracy or continuous availability.'] },
-        { h: 'Intellectual property', html: ['Game content belongs to Valve Corporation. Original site content belongs to its owner. See the <a href="legal">legal notice</a>.'] },
+        { h: 'Intellectual property', html: ['Game content belongs to its respective owners. Original site content belongs to its owner. See the <a href="legal">legal notice</a>.'] },
         { h: 'Changes', html: ['We may change these terms and the site at any time. The date of the last update is shown on this page.'] },
         { h: 'Governing law', html: ['These terms are governed by Spanish law.'] },
       ],

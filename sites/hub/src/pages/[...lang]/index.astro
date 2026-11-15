@@ -1,0 +1,72 @@
+---
+import Layout from '../../components/Layout.astro';
+import { langParams } from '@gamesites/core/lib/i18n';
+import { ctx, SITE, BUILD_DATE } from '../../lib/site';
+import { GAMES } from '../../games';
+export function getStaticPaths() { return langParams(SITE); }
+const c = ctx(Astro.params.lang);
+const { t, L, lang } = c;
+const fmtDate = (iso: string) => new Intl.DateTimeFormat(c.locale.lang, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(iso + 'T00:00:00Z'));
+const daysTo = (iso: string) => Math.ceil((Date.parse(iso + 'T00:00:00Z') - BUILD_DATE.getTime()) / 86400000);
+const covered = GAMES.filter((g) => g.status !== 'upcoming');
+const upcoming = GAMES.filter((g) => g.release).sort((a, b) => a.release!.localeCompare(b.release!));
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: SITE.url, inLanguage: c.locale.lang },
+  { '@context': 'https://schema.org', '@type': 'ItemList', name: t('nav_calendar'), itemListElement: upcoming.map((g, i) => ({ '@type': 'ListItem', position: i + 1, item: { '@type': 'VideoGame', name: g.name, publisher: g.publisher, datePublished: g.release, gamePlatform: g.platforms } })) },
+];
+---
+<Layout c={c} path="/" title={t('home_title')} description={t('home_desc')} jsonLd={jsonLd}>
+  <section class="hub-hero">
+    <h1>{t('home_h1')}</h1>
+    <p class="lede">{t('home_lede')}</p>
+  </section>
+
+  <h2 id="games">{t('games_h2')}</h2>
+  <div class="game-grid">
+    {covered.map((g) => {
+      const live = g.status === 'live';
+      const Tag = live ? 'a' : 'div';
+      return (
+        <Tag class="game-card" href={live ? L(`/${g.slug}`) : undefined} style={`--g:${g.color}`}>
+          <span class={`badge ${g.status}`}>{live ? t('status_live') : t('status_soon')}</span>
+          <h3>{g.name}</h3>
+          <p>{g.blurb[lang]}</p>
+          <p class="muted small">{g.publisher} · {g.platforms}</p>
+          {live && <span class="go">{t('open_section')} →</span>}
+        </Tag>
+      );
+    })}
+  </div>
+
+  <h2 id="calendar">{t('nav_calendar')}</h2>
+  <div class="table-wrap">
+    <table class="cal">
+      <tbody>
+        {upcoming.map((g) => {
+          const d = daysTo(g.release!);
+          return (
+            <tr style={`--g:${g.color}`}>
+              <td class="cal-date"><b>{fmtDate(g.release!)}</b><br /><span class="muted small">{d > 0 ? t('days_left', { n: d }) : t('released')}</span></td>
+              <td class="cal-game"><b>{g.name}</b><br /><span class="muted small">{g.blurb[lang]}</span></td>
+              <td class="hide-sm muted small">{g.publisher}<br />{g.platforms}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  </div>
+  <p class="muted small">{t('cal_note')}</p>
+</Layout>
+<style>
+  .hub-hero { padding: 18px 0 6px; }
+  .game-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  .game-card { display: block; position: relative; background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--g); border-radius: var(--radius); padding: 16px; color: var(--text); }
+  a.game-card:hover { text-decoration: none; border-color: var(--g); }
+  .game-card h3 { margin: 6px 0 6px; font-size: 1.2rem; }
+  .game-card p { margin: 0 0 8px; }
+  .badge { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 2px 8px; border-radius: 999px; background: var(--bg2); color: var(--muted); }
+  .badge.live { background: var(--good); color: #111; }
+  .go { color: var(--accent); font-weight: 600; }
+  .cal td { text-align: left; white-space: normal; vertical-align: top; }
+  .cal tr td:first-child { box-shadow: inset 4px 0 var(--g); width: 1%; white-space: nowrap; }
+</style>

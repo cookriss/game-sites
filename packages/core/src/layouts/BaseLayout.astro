@@ -92,7 +92,7 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
       {strings.updated && <p>{strings.updated}</p>}
       <p>{strings.disclaimer}</p>
       <p class="links">
-        <a href="/about">{strings.about}</a>
+        <a href={strings.aboutHref ?? "/about"}>{strings.about}</a>
         {(strings.legal ?? [{ href: '/privacy', label: strings.privacy }]).map((l) => <> · <a href={l.href}>{l.label}</a></>)}
         {site.adsenseClient && strings.cookieSettings && <> · <button type="button" class="linklike" id="cookie-settings">{strings.cookieSettings}</button></>}
       </p>

@@ -5,7 +5,8 @@ One reusable base for ad-funded game data sites (tier lists, builds, stats), one
 ```
 packages/core/   Shared layout, SEO (canonical, hreflang, JSON-LD), i18n helpers,
                  API fetch cache, ad slots, legal pages and consent.
-sites/<game>/    One Astro site per game (none active right now).
+sites/hub/        The main site (provisional brand "Partida"): home, release calendar,
+                 legal pages. Game sections live under sites/hub/src/pages/[...lang]/<game>/.
 ```
 
 ## Starting a new game site

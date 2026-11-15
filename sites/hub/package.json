@@ -1,0 +1,12 @@
+{
+  "name": "hub-site",
+  "private": true,
+  "type": "module",
+  "scripts": { "dev": "astro dev", "build": "astro build", "preview": "astro preview" },
+  "dependencies": {
+    "@gamesites/core": "*",
+    "astro": "^6.4.8",
+    "@astrojs/sitemap": "^3.6.0",
+    "sharp": "^0.34.0"
+  }
+}

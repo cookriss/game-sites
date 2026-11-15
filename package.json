@@ -5,5 +5,8 @@
     "packages/*",
     "sites/*"
   ],
-  "scripts": {}
+  "scripts": {
+    "dev:hub": "npm run dev -w sites/hub",
+    "build:hub": "npm run build -w sites/hub"
+  }
 }

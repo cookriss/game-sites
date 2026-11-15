@@ -1,0 +1,9 @@
+---
+import Layout from '../components/Layout.astro';
+import { ctx } from '../lib/site';
+const c = ctx(undefined);
+---
+<Layout c={c} path="/404" title={`${c.t('nf_title')} | ${c.site.name}`} description={c.t('nf_p')} noindex localized={false} ad={false}>
+  <h1>{c.t('nf_title')}</h1>
+  <p>{c.t('nf_p')} <a href="/">{c.t('nf_home')}</a> · <a href="/es">Español</a> · <a href="/pt">Português</a></p>
+</Layout>
