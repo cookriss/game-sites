@@ -43,6 +43,18 @@ const en = {
   reg_Europe: 'Europe', reg_NAmerica: 'North America', reg_SAmerica: 'South America', reg_Asia: 'Asia', reg_Oceania: 'Oceania',
   sort_hint: 'Click a column to sort.',
   window_note: 'Matches from the last {days} days.',
+  nav_players: 'Players',
+  players_title: 'Deadlock Player Search: Stats, Rank and Match History',
+  players_desc: 'Look up any Deadlock player by Steam name or ID: rank, win rate, most played heroes and recent matches, updated live.',
+  players_h1: 'Deadlock player search',
+  players_lede: 'Find any player by Steam name, Steam ID or profile link to see their rank, best heroes and latest matches.',
+  search_ph: 'Steam name, ID or profile link', search_btn: 'Search', no_results: 'No players found. Try the exact Steam name or paste the profile link.',
+  player_title: 'Player profile', player_desc: 'Deadlock player profile: rank, win rate, most played heroes and recent matches.',
+  player_not_found: 'Player not found or profile is private.', player_noid: 'Search for a player to see their profile.',
+  recent_matches: 'Recent matches', most_played: 'Most played heroes', unranked: 'Unranked', steam_profile: 'Steam profile',
+  col_result: 'Result', col_duration: 'Duration', col_when: 'When', col_souls: 'Souls', win: 'Win', loss: 'Loss',
+  sum_matches: 'Matches', sum_wr: 'Win rate', sum_kda: 'KDA', sum_hero: 'Main hero', last_n: 'Last {n} matches',
+  players_how: 'How it works', players_how_1: 'Profiles come from public match data collected by deadlock-api.com. Matches usually appear a few minutes after they end.', players_how_2: 'If a player has never been seen in a tracked match, they will not show up yet.',
 };
 type D = typeof en;
 
@@ -86,6 +98,18 @@ const es: Partial<D> = {
   reg_Europe: 'Europa', reg_NAmerica: 'Norteamérica', reg_SAmerica: 'Sudamérica', reg_Asia: 'Asia', reg_Oceania: 'Oceanía',
   sort_hint: 'Pulsa una columna para ordenar.',
   window_note: 'Partidas de los últimos {days} días.',
+  nav_players: 'Jugadores',
+  players_title: 'Buscar jugadores de Deadlock: estadísticas, rango e historial',
+  players_desc: 'Busca cualquier jugador de Deadlock por nombre o ID de Steam: rango, porcentaje de victorias, héroes más jugados y últimas partidas en directo.',
+  players_h1: 'Buscador de jugadores de Deadlock',
+  players_lede: 'Encuentra a cualquier jugador por su nombre de Steam, su ID o el enlace de su perfil y mira su rango, sus mejores héroes y sus últimas partidas.',
+  search_ph: 'Nombre, ID o enlace de Steam', search_btn: 'Buscar', no_results: 'No hay jugadores con ese nombre. Prueba con el nombre exacto de Steam o pega el enlace del perfil.',
+  player_title: 'Perfil de jugador', player_desc: 'Perfil de jugador de Deadlock: rango, porcentaje de victorias, héroes más jugados y últimas partidas.',
+  player_not_found: 'No se encuentra el jugador o su perfil es privado.', player_noid: 'Busca un jugador para ver su perfil.',
+  recent_matches: 'Últimas partidas', most_played: 'Héroes más jugados', unranked: 'Sin rango', steam_profile: 'Perfil de Steam',
+  col_result: 'Resultado', col_duration: 'Duración', col_when: 'Cuándo', col_souls: 'Almas', win: 'Victoria', loss: 'Derrota',
+  sum_matches: 'Partidas', sum_wr: '% de victorias', sum_kda: 'KDA', sum_hero: 'Héroe principal', last_n: 'Últimas {n} partidas',
+  players_how: 'Cómo funciona', players_how_1: 'Los perfiles salen de datos públicos de partidas recogidos por deadlock-api.com. Las partidas suelen aparecer unos minutos después de terminar.', players_how_2: 'Si un jugador nunca ha aparecido en una partida registrada, todavía no saldrá.',
 };
 
 const pt: Partial<D> = {
@@ -128,6 +152,18 @@ const pt: Partial<D> = {
   reg_Europe: 'Europa', reg_NAmerica: 'América do Norte', reg_SAmerica: 'América do Sul', reg_Asia: 'Ásia', reg_Oceania: 'Oceania',
   sort_hint: 'Clique numa coluna para ordenar.',
   window_note: 'Partidas dos últimos {days} dias.',
+  nav_players: 'Jogadores',
+  players_title: 'Buscar jogadores de Deadlock: estatísticas, rank e histórico',
+  players_desc: 'Procure qualquer jogador de Deadlock pelo nome ou ID da Steam: rank, taxa de vitória, heróis mais jogados e partidas recentes, ao vivo.',
+  players_h1: 'Busca de jogadores de Deadlock',
+  players_lede: 'Encontre qualquer jogador pelo nome da Steam, ID ou link do perfil e veja o rank, os melhores heróis e as últimas partidas.',
+  search_ph: 'Nome, ID ou link da Steam', search_btn: 'Buscar', no_results: 'Nenhum jogador encontrado. Tente o nome exato da Steam ou cole o link do perfil.',
+  player_title: 'Perfil do jogador', player_desc: 'Perfil de jogador de Deadlock: rank, taxa de vitória, heróis mais jogados e partidas recentes.',
+  player_not_found: 'Jogador não encontrado ou perfil privado.', player_noid: 'Busque um jogador para ver o perfil.',
+  recent_matches: 'Partidas recentes', most_played: 'Heróis mais jogados', unranked: 'Sem rank', steam_profile: 'Perfil na Steam',
+  col_result: 'Resultado', col_duration: 'Duração', col_when: 'Quando', col_souls: 'Almas', win: 'Vitória', loss: 'Derrota',
+  sum_matches: 'Partidas', sum_wr: 'Taxa de vitória', sum_kda: 'KDA', sum_hero: 'Herói principal', last_n: 'Últimas {n} partidas',
+  players_how: 'Como funciona', players_how_1: 'Os perfis vêm de dados públicos de partidas coletados pelo deadlock-api.com. As partidas costumam aparecer alguns minutos depois de terminar.', players_how_2: 'Se um jogador nunca apareceu numa partida registrada, ele ainda não aparece aqui.',
 };
 
 const ru: Partial<D> = {
@@ -170,6 +206,18 @@ const ru: Partial<D> = {
   reg_Europe: 'Европа', reg_NAmerica: 'Северная Америка', reg_SAmerica: 'Южная Америка', reg_Asia: 'Азия', reg_Oceania: 'Океания',
   sort_hint: 'Нажмите на столбец для сортировки.',
   window_note: 'Матчи за последние {days} дн.',
+  nav_players: 'Игроки',
+  players_title: 'Поиск игроков Deadlock: статистика, ранг и история матчей',
+  players_desc: 'Найдите любого игрока Deadlock по нику или ID Steam: ранг, винрейт, любимые герои и последние матчи в реальном времени.',
+  players_h1: 'Поиск игроков Deadlock',
+  players_lede: 'Найдите игрока по нику Steam, ID или ссылке на профиль и посмотрите его ранг, лучших героев и последние матчи.',
+  search_ph: 'Ник, ID или ссылка Steam', search_btn: 'Найти', no_results: 'Игроки не найдены. Введите точный ник Steam или вставьте ссылку на профиль.',
+  player_title: 'Профиль игрока', player_desc: 'Профиль игрока Deadlock: ранг, винрейт, любимые герои и последние матчи.',
+  player_not_found: 'Игрок не найден или профиль скрыт.', player_noid: 'Найдите игрока, чтобы открыть профиль.',
+  recent_matches: 'Последние матчи', most_played: 'Любимые герои', unranked: 'Без ранга', steam_profile: 'Профиль Steam',
+  col_result: 'Итог', col_duration: 'Длительность', col_when: 'Когда', col_souls: 'Души', win: 'Победа', loss: 'Поражение',
+  sum_matches: 'Матчи', sum_wr: 'Винрейт', sum_kda: 'KDA', sum_hero: 'Основной герой', last_n: 'Последние {n} матчей',
+  players_how: 'Как это работает', players_how_1: 'Профили строятся по открытым данным матчей с deadlock-api.com. Матч обычно появляется через несколько минут после окончания.', players_how_2: 'Если игрок ещё не попадал в отслеживаемые матчи, его пока не будет.',
 };
 
 const de: Partial<D> = {
@@ -212,6 +260,18 @@ const de: Partial<D> = {
   reg_Europe: 'Europa', reg_NAmerica: 'Nordamerika', reg_SAmerica: 'Südamerika', reg_Asia: 'Asien', reg_Oceania: 'Ozeanien',
   sort_hint: 'Zum Sortieren auf eine Spalte klicken.',
   window_note: 'Matches der letzten {days} Tage.',
+  nav_players: 'Spieler',
+  players_title: 'Deadlock Spielersuche: Stats, Rang und Match-Verlauf',
+  players_desc: 'Suche jeden Deadlock-Spieler per Steam-Name oder ID: Rang, Siegrate, meistgespielte Helden und letzte Matches, live aktualisiert.',
+  players_h1: 'Deadlock Spielersuche',
+  players_lede: 'Finde jeden Spieler über Steam-Name, Steam-ID oder Profil-Link und sieh dir Rang, beste Helden und letzte Matches an.',
+  search_ph: 'Steam-Name, ID oder Profil-Link', search_btn: 'Suchen', no_results: 'Keine Spieler gefunden. Versuche den genauen Steam-Namen oder füge den Profil-Link ein.',
+  player_title: 'Spielerprofil', player_desc: 'Deadlock-Spielerprofil: Rang, Siegrate, meistgespielte Helden und letzte Matches.',
+  player_not_found: 'Spieler nicht gefunden oder Profil privat.', player_noid: 'Suche einen Spieler, um sein Profil zu sehen.',
+  recent_matches: 'Letzte Matches', most_played: 'Meistgespielte Helden', unranked: 'Ohne Rang', steam_profile: 'Steam-Profil',
+  col_result: 'Ergebnis', col_duration: 'Dauer', col_when: 'Wann', col_souls: 'Seelen', win: 'Sieg', loss: 'Niederlage',
+  sum_matches: 'Matches', sum_wr: 'Siegrate', sum_kda: 'KDA', sum_hero: 'Main-Held', last_n: 'Letzte {n} Matches',
+  players_how: 'So funktioniert es', players_how_1: 'Profile stammen aus öffentlichen Matchdaten von deadlock-api.com. Matches erscheinen meist wenige Minuten nach Spielende.', players_how_2: 'Wurde ein Spieler noch in keinem erfassten Match gesehen, erscheint er noch nicht.',
 };
 
 const fr: Partial<D> = {
@@ -254,10 +314,24 @@ const fr: Partial<D> = {
   reg_Europe: 'Europe', reg_NAmerica: 'Amérique du Nord', reg_SAmerica: 'Amérique du Sud', reg_Asia: 'Asie', reg_Oceania: 'Océanie',
   sort_hint: 'Cliquez sur une colonne pour trier.',
   window_note: 'Parties des {days} derniers jours.',
+  nav_players: 'Joueurs',
+  players_title: 'Recherche de joueurs Deadlock : stats, rang et historique',
+  players_desc: "Recherchez n'importe quel joueur Deadlock par pseudo ou ID Steam : rang, taux de victoire, héros les plus joués et dernières parties, en direct.",
+  players_h1: 'Recherche de joueurs Deadlock',
+  players_lede: "Trouvez n'importe quel joueur par pseudo Steam, ID ou lien de profil pour voir son rang, ses meilleurs héros et ses dernières parties.",
+  search_ph: 'Pseudo, ID ou lien Steam', search_btn: 'Rechercher', no_results: 'Aucun joueur trouvé. Essayez le pseudo Steam exact ou collez le lien du profil.',
+  player_title: 'Profil du joueur', player_desc: 'Profil de joueur Deadlock : rang, taux de victoire, héros les plus joués et dernières parties.',
+  player_not_found: 'Joueur introuvable ou profil privé.', player_noid: 'Recherchez un joueur pour voir son profil.',
+  recent_matches: 'Dernières parties', most_played: 'Héros les plus joués', unranked: 'Non classé', steam_profile: 'Profil Steam',
+  col_result: 'Résultat', col_duration: 'Durée', col_when: 'Quand', col_souls: 'Âmes', win: 'Victoire', loss: 'Défaite',
+  sum_matches: 'Parties', sum_wr: 'Taux de victoire', sum_kda: 'KDA', sum_hero: 'Héros principal', last_n: '{n} dernières parties',
+  players_how: 'Comment ça marche', players_how_1: 'Les profils proviennent des données publiques de parties collectées par deadlock-api.com. Une partie apparaît en général quelques minutes après la fin.', players_how_2: "Si un joueur n'a jamais été vu dans une partie suivie, il n'apparaîtra pas encore.",
 };
 
 export const UI_KEYS_FOR_CLIENT = [
   'col_tier', 'col_wr', 'col_pr', 'col_br', 'col_matches', 'col_item', 'col_hero', 'col_buy', 'no_data', 'ao_common', 'ao_best', 'pick', 'loading',
+  'search_ph', 'search_btn', 'no_results', 'player_not_found', 'player_noid', 'recent_matches', 'most_played', 'unranked', 'steam_profile',
+  'col_result', 'col_duration', 'col_when', 'col_souls', 'col_kda', 'win', 'loss', 'sum_matches', 'sum_wr', 'sum_kda', 'sum_hero', 'last_n', 'player_title',
   'st_kills', 'st_deaths', 'st_assists', 'st_networth', 'st_damage', 'st_taken', 'st_obj', 'st_lasthits', 'st_denies', 'st_accuracy',
 ] as const;
 

@@ -94,6 +94,7 @@ export async function ctx(langParam: string | undefined) {
       { href: L('/tier-list'), label: t('nav_tier') },
       { href: L('/heroes'), label: t('nav_heroes') },
       { href: L('/items'), label: t('nav_items') },
+      { href: L('/players'), label: t('nav_players') },
     ],
     strings: {
       disclaimer: t('disclaimer'), about: t('about'), privacy: t('privacy'), language: t('language'),

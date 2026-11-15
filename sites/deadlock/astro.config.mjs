@@ -11,7 +11,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       i18n: { defaultLocale: 'en', locales: { en: 'en', es: 'es', pt: 'pt-BR', ru: 'ru', de: 'de', fr: 'fr' } },
-      filter: (page) => !page.includes('/404'),
+      filter: (page) => !page.includes('/404') && !/\/player$/.test(page),
     }),
   ],
 });

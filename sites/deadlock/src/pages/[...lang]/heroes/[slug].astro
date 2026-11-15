@@ -104,7 +104,7 @@ const jsonLd = [
         <div class="table-wrap" data-panel={b.region} hidden={i !== 0}>
           <table>
             <thead><tr><th>#</th><th>{t('nav_heroes')}</th></tr></thead>
-            <tbody>{b.entries.map((e) => <tr><td style="text-align:left"><b>{e.rank}</b> · {e.name}</td><td><span class="top-heroes">{e.heroIds.slice(0, 3).map((h) => <Fragment set:html={heroChip(pd, h, 20)} />)}</span></td></tr>)}</tbody>
+            <tbody>{b.entries.map((e) => <tr><td style="text-align:left"><b>{e.rank}</b> · {e.accountId ? <a href={L(`/player?id=${e.accountId}`)} rel="nofollow">{e.name}</a> : e.name}</td><td><span class="top-heroes">{e.heroIds.slice(0, 3).map((h) => <Fragment set:html={heroChip(pd, h, 20)} />)}</span></td></tr>)}</tbody>
           </table>
         </div>
       ))}

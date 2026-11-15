@@ -1,0 +1,45 @@
+---
+import Layout from '../../components/Layout.astro';
+import { langParams } from '@gamesites/core/lib/i18n';
+import { ctx, SITE } from '../../lib/site';
+export function getStaticPaths() { return langParams(SITE); }
+const c = await ctx(Astro.params.lang);
+const { t } = c;
+const pd = await c.pageData();
+const jsonLd = {
+  '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: SITE.url,
+  potentialAction: { '@type': 'SearchAction', target: `${SITE.url}${c.L('/players')}?q={search_term_string}`, 'query-input': 'required name=search_term_string' },
+};
+---
+<Layout c={c} path="/players" title={t('players_title')} description={t('players_desc')} jsonLd={jsonLd}>
+  <h1>{t('players_h1')}</h1>
+  <p class="lede">{t('players_lede')}</p>
+  <form class="player-search" role="search" data-search>
+    <input type="search" name="q" placeholder={t('search_ph')} aria-label={t('search_ph')} autocomplete="off" required minlength="2" />
+    <button type="submit">{t('search_btn')}</button>
+  </form>
+  <div data-results aria-live="polite"></div>
+  <h2>{t('players_how')}</h2>
+  <p>{t('players_how_1')}</p>
+  <p class="muted">{t('players_how_2')}</p>
+  <script type="application/json" id="page-data" set:html={JSON.stringify(pd)} />
+  <script>
+    import { players, parseAccountId, searchTerm, searchResults, playerHref } from '../../lib/players';
+    import type { PageData } from '../../lib/render';
+    const d: PageData = JSON.parse(document.getElementById('page-data')!.textContent!);
+    const form = document.querySelector<HTMLFormElement>('[data-search]')!;
+    const input = form.querySelector('input')!;
+    const out = document.querySelector<HTMLElement>('[data-results]')!;
+    async function run(q: string) {
+      const id = parseAccountId(q);
+      if (id) { location.href = playerHref(d, id); return; }
+      const url = new URL(location.href); url.searchParams.set('q', q); history.replaceState(null, '', url);
+      out.innerHTML = `<p class="muted">${d.s.loading}</p>`;
+      try { out.innerHTML = searchResults(await players.search(searchTerm(q)), d); }
+      catch { out.innerHTML = `<p class="muted">${d.s.no_results}</p>`; }
+    }
+    form.addEventListener('submit', (e) => { e.preventDefault(); run(input.value); });
+    const q0 = new URLSearchParams(location.search).get('q');
+    if (q0) { input.value = q0; run(q0); }
+  </script>
+</Layout>
