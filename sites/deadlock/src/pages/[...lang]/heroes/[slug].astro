@@ -1,9 +1,10 @@
 ---
 import { Image } from 'astro:assets';
 import Layout from '../../../components/Layout.astro';
-import HeroIcon from '../../../components/HeroIcon.astro';
-import ItemIcon from '../../../components/ItemIcon.astro';
-import { ctx, heroRows, getHeroes, getItems, getItemStats, getCounters, getSynergies, itemMap, WINDOW_DAYS, SITE } from '../../../lib/site';
+import RankFilter from '../../../components/RankFilter.astro';
+import { ctx, heroRows, getHeroes, getHeroStats, getItemStats, getCounters, getSynergies, getAbilityOrders, getLeaderboard, WINDOW_DAYS, SITE } from '../../../lib/site';
+import { REGIONS } from '../../../lib/data';
+import { heroHeaderStats, itemTable, matchupTable, pickMatchups, abilityOrderBlock, statRanks, itemChip, heroChip } from '../../../lib/render';
 
 export async function getStaticPaths() {
   const heroes = await getHeroes(SITE.locales[0]);
@@ -11,45 +12,38 @@ export async function getStaticPaths() {
 }
 const { heroId } = Astro.props as { heroId: number };
 const c = await ctx(Astro.params.lang);
-const { t, L } = c;
+const { t, L, f } = c;
+const pd = await c.pageData(true);
+const known = new Set(Object.keys(pd.heroes).map(Number));
+const hero = (await getHeroes(c.locale)).find((h) => h.id === heroId)!;
 const rows = await heroRows(c.locale, 'all');
-const row = rows.find((r) => r.heroId === heroId)!;
-const hero = row?.hero ?? (await getHeroes(c.locale)).find((h) => h.id === heroId)!;
-const heroById = new Map((await getHeroes(c.locale)).map((h) => [h.id, h]));
-const items = itemMap(await getItems(c.locale));
+const row = rows.find((r) => r.heroId === heroId);
 const name = hero.name;
-/** Localized name plus English name when they differ, so pages match English search terms too. */
 const seoName = hero.nameEn && hero.nameEn !== name ? `${name} (${hero.nameEn})` : name;
+const heroWr = row?.winRate ?? 0.5;
+const heroMatches = row?.matches ?? 0;
 
-// Popular build by phase (top 6 by pick rate)
+const [allStats, iStats, counters, syn, orders] = await Promise.all([getHeroStats(), getItemStats({}, heroId), getCounters(), getSynergies(), getAbilityOrders(heroId)]);
+const mu = pickMatchups(counters, heroId, known, heroMatches);
+const sy = pickMatchups(syn, heroId, known, heroMatches);
+const boards = (await Promise.all(REGIONS.map(async (r) => ({ region: r, entries: (await getLeaderboard(r, heroId)).slice(0, 10) })))).filter((b) => b.entries.length);
+
 const phases = (['early', 'mid', 'late'] as const).map((phase) => ({
-  phase,
-  label: t(`phase_${phase}`),
-  items: hero.popularItems.filter((p) => p.phase === phase && items.has(p.itemId)).sort((a, b) => b.pickRate - a.pickRate).slice(0, 6),
+  phase, label: t(`phase_${phase}`),
+  items: hero.popularItems.filter((p) => p.phase === phase && pd.items?.[p.itemId]).sort((a, b) => b.pickRate - a.pickRate).slice(0, 6),
 }));
 
-// Highest win rate items with a reasonable sample
-const iStats = (await getItemStats('all', heroId)).filter((s) => items.has(s.itemId));
-const minM = Math.max(500, (row?.matches ?? 0) * 0.02);
-const bestItems = iStats.filter((s) => s.matches >= minM).sort((a, b) => b.winRate - a.winRate).slice(0, 10);
-
-const MIN_MU = 1000;
-const counters = (await getCounters('all')).filter((m) => m.heroId === heroId && m.matches >= MIN_MU && heroById.has(m.otherId));
-const strong = [...counters].sort((a, b) => b.winRate - a.winRate).slice(0, 5);
-const weak = [...counters].sort((a, b) => a.winRate - b.winRate).slice(0, 5);
-const syn = (await getSynergies('all')).filter((m) => m.heroId === heroId && m.matches >= MIN_MU && heroById.has(m.otherId)).sort((a, b) => b.winRate - a.winRate).slice(0, 5);
-
-const wr = row ? c.pct(row.winRate) : '—';
+const wr = row ? f.pct(row.winRate) : '—';
 const title = t('hero_title', { hero: seoName, month: c.month });
 const description = t('hero_desc', { hero: seoName, wr });
-const lateNames = phases[2].items.slice(0, 3).map((p) => items.get(p.itemId)!.name).join(', ');
+const lateNames = phases[2].items.slice(0, 3).map((p) => pd.items![p.itemId].name).join(', ');
 const faq = [
   lateNames && { q: t('faq_q1', { hero: name }), a: t('faq_a1', { hero: name, items: lateNames }) },
-  weak.length && { q: t('faq_q2', { hero: name }), a: t('faq_a2', { hero: name, heroes: weak.slice(0, 3).map((m) => heroById.get(m.otherId)!.name).join(', ') }) },
-  row && { q: t('faq_q3', { hero: name }), a: t('faq_a3', { hero: name, tier: row.tier, wr, count: c.compact(row.matches), days: WINDOW_DAYS }) },
+  mu.weak.length && { q: t('faq_q2', { hero: name }), a: t('faq_a2', { hero: name, heroes: mu.weak.slice(0, 3).map((m) => pd.heroes[m.otherId].name).join(', ') }) },
+  row && { q: t('faq_q3', { hero: name }), a: t('faq_a3', { hero: name, tier: row.tier, wr, count: f.compact(row.matches), days: WINDOW_DAYS }) },
 ].filter(Boolean) as { q: string; a: string }[];
 const jsonLd = [
-  { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: c.locale.lang, mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: c.locale.lang, mainEntity: faq.map((x) => ({ '@type': 'Question', name: x.q, acceptedAnswer: { '@type': 'Answer', text: x.a } })) },
   { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
     { '@type': 'ListItem', position: 1, name: t('nav_heroes'), item: SITE.url + L('/heroes') },
     { '@type': 'ListItem', position: 2, name, item: SITE.url + L(`/heroes/${hero.slug}`) },
@@ -60,21 +54,18 @@ const jsonLd = [
   <nav class="small muted"><a href={L('/heroes')}>{t('nav_heroes')}</a> / {name}</nav>
   <header class="hero-head" style={`--c:${hero.color}`}>
     <Image src={hero.image} alt={name} width={120} height={162} class="portrait" loading="eager" />
-    <div>
+    <div class="hh-main">
       <h1>{t('hero_h1', { hero: seoName })}</h1>
       {hero.role && <p class="lede" style="margin-bottom:10px">{hero.role}</p>}
-      {row && (
-        <div class="stats">
-          <div><span class={`tier tier-${row.tier}`}>{row.tier}</span><small>{t('col_tier')}</small></div>
-          <div><b class={row.winRate >= .5 ? 'good' : 'bad'}>{wr}</b><small>{t('col_wr')}</small></div>
-          <div><b>{c.pct(row.pickRate)}</b><small>{t('col_pr')}</small></div>
-          <div><b>{c.compact(row.matches)}</b><small>{t('col_matches')}</small></div>
-        </div>
-      )}
+      <div class="stats" data-live id="hdr" set:html={heroHeaderStats(row, rows.length, pd, f)} />
     </div>
   </header>
+  <div class="filters"><RankFilter c={c} /><span class="muted small">{t('window_note', { days: WINDOW_DAYS })}</span></div>
 
   {hero.playstyle && <p>{hero.playstyle}</p>}
+
+  <h2>{t('ao_title', { hero: name })}</h2>
+  <div data-live id="ao" set:html={abilityOrderBlock(orders, heroId, pd, f)} />
 
   <h2>{t('popular_build', { hero: name })}</h2>
   <div class="phases">
@@ -82,38 +73,43 @@ const jsonLd = [
       <section class="card">
         <h3>{p.label}</h3>
         <ul class="ilist">
-          {p.items.map((x) => <li><ItemIcon item={items.get(x.itemId)!} /><span class="small muted">{c.pct(x.pickRate, 0)} {t('pick')} · <span class={x.winRate >= .5 ? 'good' : 'bad'}>{c.pct(x.winRate)}</span></span></li>)}
+          {p.items.map((x) => <li><Fragment set:html={itemChip(pd, x.itemId)} /><span class="small muted">{f.pct(x.pickRate, 0)} {t('pick')} · <span class={x.winRate >= .5 ? 'good' : 'bad'}>{f.pct(x.winRate)}</span></span></li>)}
         </ul>
       </section>
     ))}
   </div>
+  <p class="small muted">{t('build_note')}</p>
 
-  {bestItems.length > 0 && (
+  <h2>{t('best_items', { hero: name })}</h2>
+  <div data-live id="items" set:html={itemTable(iStats, heroMatches, heroWr, pd, f)} />
+  <p class="small muted">{t('delta_note', { hero: name })}</p>
+
+  <div class="two-col">
+    <section><h2>{t('strong_vs', { hero: name })}</h2><div data-live id="strong" set:html={matchupTable(mu.strong, heroWr, pd, f)} /></section>
+    <section><h2>{t('weak_vs', { hero: name })}</h2><div data-live id="weak" set:html={matchupTable(mu.weak, heroWr, pd, f)} /></section>
+  </div>
+  <h2>{t('synergy', { hero: name })}</h2>
+  <div data-live id="syn" set:html={matchupTable(sy.strong, heroWr, pd, f)} />
+
+  <h2>{t('stats_title', { hero: name })}</h2>
+  <div data-live id="statranks" set:html={statRanks(allStats, heroId, known, pd, f)} />
+
+  {boards.length > 0 && (
     <>
-      <h2>{t('best_items', { hero: name })}</h2>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>{t('col_item')}</th><th>{t('col_cost')}</th><th>{t('col_wr')}</th><th>{t('col_matches')}</th></tr></thead>
-          <tbody>{bestItems.map((s) => { const it = items.get(s.itemId)!; return (
-            <tr><td><ItemIcon item={it} size={26} /></td><td>{c.nf(it.cost)}</td><td class={s.winRate >= .5 ? 'good' : 'bad'}>{c.pct(s.winRate)}</td><td>{c.compact(s.matches)}</td></tr>
-          ); })}</tbody>
-        </table>
+      <h2>{t('top_players', { hero: name })}</h2>
+      <div class="tabs" role="tablist" data-tabs>
+        {boards.map((b, i) => <button type="button" role="tab" aria-selected={i === 0 ? 'true' : 'false'} data-tab={b.region}>{t(`reg_${b.region}`)}</button>)}
       </div>
+      {boards.map((b, i) => (
+        <div class="table-wrap" data-panel={b.region} hidden={i !== 0}>
+          <table>
+            <thead><tr><th>#</th><th>{t('nav_heroes')}</th></tr></thead>
+            <tbody>{b.entries.map((e) => <tr><td style="text-align:left"><b>{e.rank}</b> · {e.name}</td><td><span class="top-heroes">{e.heroIds.slice(0, 3).map((h) => <Fragment set:html={heroChip(pd, h, 20)} />)}</span></td></tr>)}</tbody>
+          </table>
+        </div>
+      ))}
     </>
   )}
-
-  <div class="mu">
-    {[{ h: t('strong_vs', { hero: name }), list: strong }, { h: t('weak_vs', { hero: name }), list: weak }, { h: t('synergy', { hero: name }), list: syn }].map((b) => b.list.length > 0 && (
-      <section>
-        <h2>{b.h}</h2>
-        <ul class="card hlist">
-          {b.list.map((m) => { const o = heroById.get(m.otherId)!; return (
-            <li><HeroIcon hero={o} size={28} href={L(`/heroes/${o.slug}`)} /><span class={m.winRate >= .5 ? 'good' : 'bad'}>{c.pct(m.winRate)}</span></li>
-          ); })}
-        </ul>
-      </section>
-    ))}
-  </div>
 
   {hero.abilities.length > 0 && (
     <>
@@ -132,36 +128,75 @@ const jsonLd = [
   {faq.length > 0 && (
     <>
       <h2>{t('faq')}</h2>
-      {faq.map((f) => <details class="card faq"><summary>{f.q}</summary><p>{f.a}</p></details>)}
+      {faq.map((x) => <details class="card faq"><summary>{x.q}</summary><p>{x.a}</p></details>)}
     </>
   )}
 
-  {hero.lore && (
-    <details class="card" style="margin-top:20px"><summary><strong>{t('lore')}</strong></summary><p class="muted">{hero.lore}</p></details>
-  )}
+  {hero.lore && <details class="card" style="margin-top:20px"><summary><strong>{t('lore')}</strong></summary><p class="muted">{hero.lore}</p></details>}
+
+  <script type="application/json" id="page-data" set:html={JSON.stringify(pd)} />
+  <script type="application/json" id="hero-id" set:html={JSON.stringify(heroId)} />
+  <script>
+    import { live } from '../../../lib/data/live';
+    import { tierRows, heroHeaderStats, itemTable, matchupTable, pickMatchups, abilityOrderBlock, statRanks, makeFmt, type PageData } from '../../../lib/render';
+    const d: PageData = JSON.parse(document.getElementById('page-data')!.textContent!);
+    const heroId: number = JSON.parse(document.getElementById('hero-id')!.textContent!);
+    const f = makeFmt(d.lang);
+    const known = new Set(Object.keys(d.heroes).map(Number));
+    const $ = (id: string) => document.getElementById(id)!;
+    const lives = [...document.querySelectorAll<HTMLElement>('[data-live]')];
+    document.addEventListener('rankchange', async (e) => {
+      const q = { minBadge: (e as CustomEvent).detail.minBadge };
+      lives.forEach((x) => x.classList.add('loading'));
+      try {
+        const [stats, bans, items, counters, syn, orders] = await Promise.all([
+          live.heroStats(q), live.banStats(q).catch(() => []), live.itemStats(q, heroId), live.counters(q), live.synergies(q), live.abilityOrders(q, heroId).catch(() => []),
+        ]);
+        const rows = tierRows(stats, bans, known);
+        const row = rows.find((r) => r.heroId === heroId);
+        const wr = row?.winRate ?? 0.5, m = row?.matches ?? 0;
+        $('hdr').innerHTML = heroHeaderStats(row, rows.length, d, f);
+        $('ao').innerHTML = abilityOrderBlock(orders, heroId, d, f);
+        $('items').innerHTML = itemTable(items, m, wr, d, f);
+        const mu = pickMatchups(counters, heroId, known, m), sy = pickMatchups(syn, heroId, known, m);
+        $('strong').innerHTML = matchupTable(mu.strong, wr, d, f);
+        $('weak').innerHTML = matchupTable(mu.weak, wr, d, f);
+        $('syn').innerHTML = matchupTable(sy.strong, wr, d, f);
+        $('statranks').innerHTML = statRanks(stats, heroId, known, d, f);
+      } catch { $('hdr').innerHTML = `<p class="muted">${d.s.no_data}</p>`; }
+      lives.forEach((x) => x.classList.remove('loading'));
+    });
+    const tabs = document.querySelector('[data-tabs]');
+    tabs?.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest('button'); if (!b) return;
+      tabs.querySelectorAll('button').forEach((x) => x.setAttribute('aria-selected', String(x === b)));
+      document.querySelectorAll<HTMLElement>('[data-panel]').forEach((p) => (p.hidden = p.dataset.panel !== b.dataset.tab));
+    });
+  </script>
 </Layout>
 <style>
-  .hero-head { display: flex; gap: 18px; align-items: center; margin: 10px 0 8px; flex-wrap: wrap; }
+  .hero-head { display: flex; gap: 18px; align-items: center; margin: 10px 0 0; }
+  .hh-main { min-width: 0; flex: 1; }
   .portrait { border-radius: 10px; width: 120px; height: auto; background: color-mix(in srgb, var(--c) 40%, transparent); border: 1px solid var(--line); }
-  .stats { display: flex; gap: 10px; flex-wrap: wrap; }
+  .stats { display: flex; gap: 8px; flex-wrap: wrap; }
+  .stats :global(> div) { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; display: flex; flex-direction: column; align-items: center; min-width: 92px; }
+  .stats :global(b) { font-size: 1.15rem; }
+  .stats :global(small) { color: var(--muted); font-size: .7rem; text-transform: uppercase; letter-spacing: .03em; white-space: nowrap; }
   @media (max-width: 600px) {
-    .hero-head { flex-wrap: nowrap; align-items: flex-start; gap: 12px; }
+    .hero-head { align-items: flex-start; gap: 12px; }
     .portrait { width: 72px; }
     .hero-head h1 { font-size: 1.3rem; }
     .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
-    .stats > div { min-width: 0; padding: 6px 4px; }
-    .stats b { font-size: .95rem; } .stats small { font-size: .6rem; }
+    .stats :global(> div) { min-width: 0; padding: 6px 4px; }
+    .stats :global(b) { font-size: .95rem; }
   }
-  .stats > div { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 14px; display: flex; flex-direction: column; align-items: center; min-width: 84px; }
-  .stats b { font-size: 1.15rem; } .stats small { color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; }
   .phases { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
   .phases h3 { margin: 0 0 8px; font-size: 1rem; color: var(--accent); }
-  .ilist, .hlist { list-style: none; margin: 0; padding: 0; }
+  .ilist { list-style: none; margin: 0; padding: 0; }
   .ilist li { display: flex; flex-direction: column; gap: 2px; padding: 6px 0; border-bottom: 1px solid var(--line); }
   .ilist li:last-child { border: 0; }
-  .mu { display: grid; gap: 0 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-  .hlist { padding: 8px 14px; }
-  .hlist li { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; }
+  .top-heroes { display: inline-flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+  .top-heroes :global(.hero-chip span) { display: none; }
   .ab { display: flex; gap: 12px; align-items: flex-start; }
   .ab-img { border-radius: 8px; background: #000; flex: none; }
   .faq { margin: 8px 0; } .faq summary { cursor: pointer; font-weight: 600; } .faq p { margin: 8px 0 0; }

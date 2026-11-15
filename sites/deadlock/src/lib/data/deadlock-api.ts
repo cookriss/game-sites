@@ -1,27 +1,10 @@
 import { fetchJson } from '@gamesites/core/lib/fetch-cache';
 import { slugify } from '@gamesites/core/lib/format';
-import type { DataSource, Hero, Item, HeroStat, ItemStat, Matchup, Patch, Bracket, Slot } from './model';
+import type { DataSource, Hero, Item, Rank, Patch, Slot } from './model';
+import { API, urls, norm } from './deadlock-api-core';
 
-const API = process.env.DEADLOCK_API_URL || 'https://api.deadlock-api.com';
-const DAY = 86400;
-/** Stats window. Matches the API default (30 days) but pinned so caches line up. */
-const WINDOW_DAYS = Number(process.env.STATS_WINDOW_DAYS || 30);
-/** 'high' = Oracle (tier 8) and above. Badge = tier*10 + subtier. */
-const HIGH_BADGE = 81;
-
-const since = () => Math.floor(Date.now() / 1000 / 3600) * 3600 - WINDOW_DAYS * DAY; // hour-aligned
-function q(bracket: Bracket, extra: Record<string, string | number> = {}) {
-  const p = new URLSearchParams({ min_unix_timestamp: String(since()), ...Object.fromEntries(Object.entries(extra).map(([k, v]) => [k, String(v)])) });
-  if (bracket === 'high') p.set('min_average_badge', String(HIGH_BADGE));
-  return p.toString();
-}
-
-const strip = (s?: string) => (s ?? '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-
-let itemsByClass: Map<string, any> | null = null;
-async function rawItems(lang: string): Promise<any[]> {
-  return fetchJson<any[]>(`${API}/v1/assets/items?language=${lang}`);
-}
+const strip = (s?: string) => (s ?? '').replace(/<svg[\s\S]*?<\/svg>/g, '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+const rawItems = (lang: string) => fetchJson<any[]>(`${API}/v1/assets/items?language=${lang}`);
 
 export const deadlockApi: DataSource = {
   name: 'deadlock-api',
@@ -74,46 +57,25 @@ export const deadlockApi: DataSource = {
         cost: Number(i.cost),
         image: i.shop_image_webp ?? i.shop_image ?? i.image_webp ?? i.image,
         active: Boolean(i.is_active_item),
+        description: strip(i.description?.desc),
       }));
   },
 
-  async heroStats(bracket) {
-    const raw = await fetchJson<any[]>(`${API}/v1/analytics/hero-stats?${q(bracket)}`);
-    const totalPicks = raw.reduce((s, r) => s + r.matches, 0);
-    return raw.map((r): HeroStat => ({
-      heroId: r.hero_id, matches: r.matches, wins: r.wins,
-      winRate: r.wins / Math.max(1, r.matches),
-      pickRate: (r.matches / Math.max(1, totalPicks)) * 12, // 12 players per match
-      kills: r.total_kills / r.matches, deaths: r.total_deaths / r.matches, assists: r.total_assists / r.matches,
-      netWorth: r.total_net_worth / r.matches, damage: r.total_player_damage / r.matches,
-    }));
+  async ranks(lang) {
+    const raw = await fetchJson<any[]>(`${API}/v1/assets/ranks?language=${lang}`);
+    return raw.map((r): Rank => ({ tier: r.tier, name: String(r.name).replace(/\u2060/g, '').replace(/\/(a|e|in|ин)$/i, '').trim(), color: r.color, image: r.images?.large_webp ?? r.images?.large }));
   },
 
-  async itemStats(bracket, heroId) {
-    const extra: Record<string, number> = { min_matches: 100 };
-    if (heroId) extra.hero_id = heroId;
-    const raw = await fetchJson<any[]>(`${API}/v1/analytics/item-stats?${q(bracket, extra)}`);
-    return raw.map((r): ItemStat => ({ itemId: r.item_id, matches: r.matches, winRate: r.wins / Math.max(1, r.matches), avgBuyTimeS: r.avg_buy_time_s }));
-  },
-
-  async counters(bracket) {
-    const raw = await fetchJson<any[]>(`${API}/v1/analytics/hero-counter-stats?${q(bracket, { min_matches: 100 })}`);
-    return raw.map((r): Matchup => ({ heroId: r.hero_id, otherId: r.enemy_hero_id, matches: r.matches_played, winRate: r.wins / Math.max(1, r.matches_played) }));
-  },
-
-  async synergies(bracket) {
-    const raw = await fetchJson<any[]>(`${API}/v1/analytics/hero-synergy-stats?${q(bracket, { min_matches: 100 })}`);
-    return raw.flatMap((r): Matchup[] => {
-      const wr = r.wins / Math.max(1, r.matches_played);
-      return [
-        { heroId: r.hero_id1, otherId: r.hero_id2, matches: r.matches_played, winRate: wr },
-        { heroId: r.hero_id2, otherId: r.hero_id1, matches: r.matches_played, winRate: wr },
-      ];
-    });
-  },
+  heroStats: async (q) => norm.heroStats(await fetchJson(urls.heroStats(q))),
+  banStats: async (q) => norm.banStats(await fetchJson(urls.banStats(q))),
+  itemStats: async (q, heroId) => norm.itemStats(await fetchJson(urls.itemStats(q, heroId))),
+  counters: async (q) => norm.counters(await fetchJson(urls.counters(q))),
+  synergies: async (q) => norm.synergies(await fetchJson(urls.synergies(q))),
+  abilityOrders: async (q, heroId) => norm.abilityOrders(await fetchJson(urls.abilityOrders(q, heroId))),
+  leaderboard: async (region, heroId) => norm.leaderboard(await fetchJson(urls.leaderboard(region, heroId)).catch(() => ({ entries: [] }))),
 
   async patches() {
     const raw = await fetchJson<any[]>(`${API}/v2/patches`);
-    return raw.slice(0, 10).map((p): Patch => ({ title: p.title, date: p.pub_date, url: p.link }));
+    return raw.slice(0, 20).map((p): Patch => ({ title: p.title, date: p.pub_date, url: p.link }));
   },
 };

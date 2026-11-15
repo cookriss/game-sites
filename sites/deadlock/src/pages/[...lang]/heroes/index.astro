@@ -2,11 +2,11 @@
 import Layout from '../../../components/Layout.astro';
 import HeroIcon from '../../../components/HeroIcon.astro';
 import { langParams } from '@gamesites/core/lib/i18n';
-import { ctx, heroRows, SITE } from '../../../lib/site';
+import { ctx, heroRowsWithHero, SITE } from '../../../lib/site';
 export function getStaticPaths() { return langParams(SITE); }
 const c = await ctx(Astro.params.lang);
 const { t, L } = c;
-const rows = (await heroRows(c.locale, 'all')).sort((a, b) => a.hero.name.localeCompare(b.hero.name, c.locale.lang));
+const rows = (await heroRowsWithHero(c.locale, 'all')).sort((a, b) => a.hero.name.localeCompare(b.hero.name, c.locale.lang));
 ---
 <Layout c={c} path="/heroes" title={t('heroes_title')} description={t('heroes_desc')}>
   <h1>{t('heroes_h1')}</h1>

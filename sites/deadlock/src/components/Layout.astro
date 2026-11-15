@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@gamesites/core/layouts/BaseLayout.astro';
 import AdSlot from '@gamesites/core/components/AdSlot.astro';
+import '../styles/site.css';
 import type { Ctx } from '../lib/site';
 interface Props { c: Ctx; path: string; title: string; description: string; jsonLd?: object | object[]; ogImage?: string }
 const { c, path, title, description, jsonLd, ogImage } = Astro.props;

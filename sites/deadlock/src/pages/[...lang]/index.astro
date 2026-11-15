@@ -2,11 +2,11 @@
 import Layout from '../../components/Layout.astro';
 import HeroIcon from '../../components/HeroIcon.astro';
 import { langParams } from '@gamesites/core/lib/i18n';
-import { ctx, heroRows, getPatches, SITE } from '../../lib/site';
+import { ctx, heroRowsWithHero, getPatches, SITE } from '../../lib/site';
 export function getStaticPaths() { return langParams(SITE); }
 const c = await ctx(Astro.params.lang);
 const { t, L } = c;
-const rows = await heroRows(c.locale, 'all');
+const rows = await heroRowsWithHero(c.locale, 'all');
 const top = rows.slice(0, 8);
 const patches = (await getPatches()).slice(0, 5);
 const jsonLd = { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: SITE.url + L('/'), inLanguage: c.locale.lang };

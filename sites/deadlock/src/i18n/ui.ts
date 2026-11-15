@@ -34,7 +34,15 @@ const en = {
   items_h1: 'Deadlock items',
   items_lede: 'Win rate of every shop item in the last {days} days. Items bought late naturally show higher win rates, so compare within the same tier.',
   slot_weapon: 'Weapon', slot_vitality: 'Vitality', slot_spirit: 'Spirit',
-  sample_note: 'Win rates on fewer than 1,000 matches are less reliable.',
+  sample_note: 'Win rates on fewer than 1,000 matches are less reliable.',  col_br: 'Ban rate', col_buy: 'Avg. buy time', no_data: 'Not enough data for this filter.',
+  ao_title: '{hero} ability order', ao_common: 'Most common order', ao_best: 'Highest win rate order',
+  stats_title: '{hero} per match, compared with every hero',
+  st_kills: 'Kills', st_deaths: 'Deaths', st_assists: 'Assists', st_networth: 'Souls', st_damage: 'Hero damage', st_taken: 'Damage taken', st_obj: 'Objective damage', st_lasthits: 'Last hits', st_denies: 'Denies', st_accuracy: 'Accuracy',
+  rank_label: 'Rank', rank_all: 'All ranks', rank_plus: '{rank}+', loading: 'Loading…',
+  top_players: 'Top {hero} players', build_note: 'Popular items are counted across all ranks.', delta_note: 'Δ compares with the overall win rate of {hero}.',
+  reg_Europe: 'Europe', reg_NAmerica: 'North America', reg_SAmerica: 'South America', reg_Asia: 'Asia', reg_Oceania: 'Oceania',
+  sort_hint: 'Click a column to sort.',
+  window_note: 'Matches from the last {days} days.',
 };
 type D = typeof en;
 
@@ -69,7 +77,15 @@ const es: Partial<D> = {
   items_h1: 'Objetos de Deadlock',
   items_lede: '% de victorias de cada objeto en los últimos {days} días. Los objetos que se compran tarde suelen tener más victorias, así que compara dentro del mismo tier.',
   slot_weapon: 'Arma', slot_vitality: 'Vitalidad', slot_spirit: 'Espíritu',
-  sample_note: 'Los porcentajes con menos de 1.000 partidas son menos fiables.',
+  sample_note: 'Los porcentajes con menos de 1.000 partidas son menos fiables.',  col_br: '% baneo', col_buy: 'Compra media', no_data: 'No hay datos suficientes con este filtro.',
+  ao_title: 'Orden de habilidades de {hero}', ao_common: 'Orden más común', ao_best: 'Orden con más victorias',
+  stats_title: '{hero} por partida, comparado con todos los héroes',
+  st_kills: 'Bajas', st_deaths: 'Muertes', st_assists: 'Asistencias', st_networth: 'Almas', st_damage: 'Daño a héroes', st_taken: 'Daño recibido', st_obj: 'Daño a objetivos', st_lasthits: 'Últimos golpes', st_denies: 'Denegaciones', st_accuracy: 'Precisión',
+  rank_label: 'Rango', rank_all: 'Todos los rangos', loading: 'Cargando…',
+  top_players: 'Mejores jugadores de {hero}', build_note: 'Los objetos populares cuentan todos los rangos.', delta_note: 'Δ compara con el % de victorias general de {hero}.',
+  reg_Europe: 'Europa', reg_NAmerica: 'Norteamérica', reg_SAmerica: 'Sudamérica', reg_Asia: 'Asia', reg_Oceania: 'Oceanía',
+  sort_hint: 'Pulsa una columna para ordenar.',
+  window_note: 'Partidas de los últimos {days} días.',
 };
 
 const pt: Partial<D> = {
@@ -103,7 +119,15 @@ const pt: Partial<D> = {
   items_h1: 'Itens de Deadlock',
   items_lede: 'Taxa de vitória de cada item nos últimos {days} dias. Itens comprados mais tarde costumam ter mais vitórias, então compare dentro do mesmo tier.',
   slot_weapon: 'Arma', slot_vitality: 'Vitalidade', slot_spirit: 'Espírito',
-  sample_note: 'Taxas com menos de 1.000 partidas são menos confiáveis.',
+  sample_note: 'Taxas com menos de 1.000 partidas são menos confiáveis.',  col_br: 'Taxa de ban', col_buy: 'Compra média', no_data: 'Dados insuficientes para este filtro.',
+  ao_title: 'Ordem de habilidades de {hero}', ao_common: 'Ordem mais comum', ao_best: 'Ordem com mais vitórias',
+  stats_title: '{hero} por partida, comparado com todos os heróis',
+  st_kills: 'Abates', st_deaths: 'Mortes', st_assists: 'Assistências', st_networth: 'Almas', st_damage: 'Dano a heróis', st_taken: 'Dano recebido', st_obj: 'Dano a objetivos', st_lasthits: 'Últimos golpes', st_denies: 'Negações', st_accuracy: 'Precisão',
+  rank_label: 'Rank', rank_all: 'Todos os ranks', loading: 'Carregando…',
+  top_players: 'Melhores jogadores de {hero}', build_note: 'Os itens populares contam todos os ranks.', delta_note: 'Δ compara com a taxa de vitória geral de {hero}.',
+  reg_Europe: 'Europa', reg_NAmerica: 'América do Norte', reg_SAmerica: 'América do Sul', reg_Asia: 'Ásia', reg_Oceania: 'Oceania',
+  sort_hint: 'Clique numa coluna para ordenar.',
+  window_note: 'Partidas dos últimos {days} dias.',
 };
 
 const ru: Partial<D> = {
@@ -137,7 +161,15 @@ const ru: Partial<D> = {
   items_h1: 'Предметы Deadlock',
   items_lede: 'Винрейт каждого предмета за последние {days} дн. Поздние покупки обычно имеют более высокий винрейт, поэтому сравнивайте внутри одного тира.',
   slot_weapon: 'Оружие', slot_vitality: 'Живучесть', slot_spirit: 'Дух',
-  sample_note: 'Винрейт по менее чем 1000 матчам менее надёжен.',
+  sample_note: 'Винрейт по менее чем 1000 матчам менее надёжен.',  col_br: 'Банрейт', col_buy: 'Ср. время покупки', no_data: 'Недостаточно данных для этого фильтра.',
+  ao_title: 'Порядок способностей {hero}', ao_common: 'Самый частый порядок', ao_best: 'Порядок с лучшим винрейтом',
+  stats_title: '{hero} за матч в сравнении со всеми героями',
+  st_kills: 'Убийства', st_deaths: 'Смерти', st_assists: 'Помощь', st_networth: 'Души', st_damage: 'Урон по героям', st_taken: 'Полученный урон', st_obj: 'Урон по объектам', st_lasthits: 'Добивания', st_denies: 'Отказы', st_accuracy: 'Точность',
+  rank_label: 'Ранг', rank_all: 'Все ранги', loading: 'Загрузка…',
+  top_players: 'Лучшие игроки на {hero}', build_note: 'Популярные предметы считаются по всем рангам.', delta_note: 'Δ — разница с общим винрейтом {hero}.',
+  reg_Europe: 'Европа', reg_NAmerica: 'Северная Америка', reg_SAmerica: 'Южная Америка', reg_Asia: 'Азия', reg_Oceania: 'Океания',
+  sort_hint: 'Нажмите на столбец для сортировки.',
+  window_note: 'Матчи за последние {days} дн.',
 };
 
 const de: Partial<D> = {
@@ -171,7 +203,15 @@ const de: Partial<D> = {
   items_h1: 'Deadlock Items',
   items_lede: 'Siegrate jedes Items der letzten {days} Tage. Spät gekaufte Items haben meist höhere Siegraten, vergleiche daher innerhalb eines Tiers.',
   slot_weapon: 'Waffe', slot_vitality: 'Vitalität', slot_spirit: 'Geist',
-  sample_note: 'Siegraten mit weniger als 1.000 Matches sind weniger zuverlässig.',
+  sample_note: 'Siegraten mit weniger als 1.000 Matches sind weniger zuverlässig.',  col_br: 'Bannrate', col_buy: 'Ø Kaufzeit', no_data: 'Nicht genug Daten für diesen Filter.',
+  ao_title: '{hero} Fähigkeiten-Reihenfolge', ao_common: 'Häufigste Reihenfolge', ao_best: 'Reihenfolge mit höchster Siegrate',
+  stats_title: '{hero} pro Match im Vergleich zu allen Helden',
+  st_kills: 'Kills', st_deaths: 'Tode', st_assists: 'Assists', st_networth: 'Seelen', st_damage: 'Heldenschaden', st_taken: 'Erlittener Schaden', st_obj: 'Objektschaden', st_lasthits: 'Last Hits', st_denies: 'Denies', st_accuracy: 'Treffergenauigkeit',
+  rank_label: 'Rang', rank_all: 'Alle Ränge', loading: 'Lädt…',
+  top_players: 'Beste {hero}-Spieler', build_note: 'Beliebte Items zählen alle Ränge.', delta_note: 'Δ vergleicht mit der Gesamt-Siegrate von {hero}.',
+  reg_Europe: 'Europa', reg_NAmerica: 'Nordamerika', reg_SAmerica: 'Südamerika', reg_Asia: 'Asien', reg_Oceania: 'Ozeanien',
+  sort_hint: 'Zum Sortieren auf eine Spalte klicken.',
+  window_note: 'Matches der letzten {days} Tage.',
 };
 
 const fr: Partial<D> = {
@@ -205,8 +245,21 @@ const fr: Partial<D> = {
   items_h1: 'Objets Deadlock',
   items_lede: 'Taux de victoire de chaque objet sur les {days} derniers jours. Les objets achetés tard ont souvent un meilleur taux, comparez donc au sein d’un même tier.',
   slot_weapon: 'Arme', slot_vitality: 'Vitalité', slot_spirit: 'Esprit',
-  sample_note: 'Les taux sur moins de 1 000 parties sont moins fiables.',
+  sample_note: 'Les taux sur moins de 1 000 parties sont moins fiables.',  col_br: 'Taux de ban', col_buy: 'Achat moyen', no_data: 'Pas assez de données pour ce filtre.',
+  ao_title: 'Ordre des compétences de {hero}', ao_common: 'Ordre le plus courant', ao_best: 'Ordre au meilleur taux de victoire',
+  stats_title: '{hero} par partie, comparé à tous les héros',
+  st_kills: 'Éliminations', st_deaths: 'Morts', st_assists: 'Assistances', st_networth: 'Âmes', st_damage: 'Dégâts aux héros', st_taken: 'Dégâts subis', st_obj: 'Dégâts aux objectifs', st_lasthits: 'Derniers coups', st_denies: 'Refus', st_accuracy: 'Précision',
+  rank_label: 'Rang', rank_all: 'Tous les rangs', loading: 'Chargement…',
+  top_players: 'Meilleurs joueurs de {hero}', build_note: 'Les objets populaires comptent tous les rangs.', delta_note: 'Δ compare avec le taux de victoire global de {hero}.',
+  reg_Europe: 'Europe', reg_NAmerica: 'Amérique du Nord', reg_SAmerica: 'Amérique du Sud', reg_Asia: 'Asie', reg_Oceania: 'Océanie',
+  sort_hint: 'Cliquez sur une colonne pour trier.',
+  window_note: 'Parties des {days} derniers jours.',
 };
+
+export const UI_KEYS_FOR_CLIENT = [
+  'col_tier', 'col_wr', 'col_pr', 'col_br', 'col_matches', 'col_item', 'col_hero', 'col_buy', 'no_data', 'ao_common', 'ao_best', 'pick', 'loading',
+  'st_kills', 'st_deaths', 'st_assists', 'st_networth', 'st_damage', 'st_taken', 'st_obj', 'st_lasthits', 'st_denies', 'st_accuracy',
+] as const;
 
 export const useT = makeT<D>({ '': en, es, pt, ru, de, fr }, en);
 export type T = ReturnType<typeof useT>;
