@@ -4,6 +4,7 @@ import type { GamePageContent } from '../content/types';
 import { BUILD_DATE, type Ctx } from '../lib/site';
 import { GAMES } from '../games';
 import PetitPlanetTheme from '../themes/PetitPlanetTheme.astro';
+import { SECTION_NAV } from '../content/nav';
 interface Props { c: Ctx; page: GamePageContent }
 const { c, page } = Astro.props;
 const { lang, L, t } = c;
@@ -16,22 +17,35 @@ const pp = page.slug === 'petit-planet';
 const game = GAMES.find((g) => g.slug === page.slug);
 const fmt = (iso: string) => new Intl.DateTimeFormat(c.locale.lang, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(iso + 'T00:00:00Z'));
 const days = page.release ? Math.ceil((Date.parse(page.release + 'T00:00:00Z') - BUILD_DATE.getTime()) / 86400000) : undefined;
-const url = c.site.url + L('/' + page.slug);
+const path = page.path ?? '/' + page.slug;
+const isSub = path !== '/' + page.slug;
+const url = c.site.url + L(path);
+const faq = page.faq ?? [];
+const facts = page.facts ?? [];
+const subnav = SECTION_NAV[page.slug] ?? [];
+/** Content HTML writes internal links as {L}/path so they get the locale prefix. */
+const fill = (h: string) => h.replace(/\{L\}(\/[^"]*)/g, (_m, p: string) => L(p));
 const jsonLd = [
   { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
     { '@type': 'ListItem', position: 1, name: S.home, item: c.site.url + L('/') },
-    { '@type': 'ListItem', position: 2, name: page.name, item: url },
+    { '@type': 'ListItem', position: 2, name: page.name, item: c.site.url + L('/' + page.slug) },
+    ...(isSub ? [{ '@type': 'ListItem', position: 3, name: page.crumb?.[lang] ?? page.h1[lang], item: url }] : []),
   ] },
-  { '@context': 'https://schema.org', '@type': 'VideoGame', name: page.name, url, datePublished: page.release, publisher: game ? { '@type': 'Organization', name: game.publisher } : undefined, gamePlatform: game?.platforms },
-  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: page.faq.map((f) => ({ '@type': 'Question', name: f.q[lang], acceptedAnswer: { '@type': 'Answer', text: f.a[lang] } })) },
+  !isSub && { '@context': 'https://schema.org', '@type': 'VideoGame', name: page.name, url, datePublished: page.release, publisher: game ? { '@type': 'Organization', name: game.publisher } : undefined, gamePlatform: game?.platforms },
+  faq.length > 0 && { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q[lang], acceptedAnswer: { '@type': 'Answer', text: f.a[lang] } })) },
   { '@context': 'https://schema.org', '@type': 'Article', headline: page.h1[lang], dateModified: page.updated, inLanguage: c.locale.lang, mainEntityOfPage: url },
-];
+].filter(Boolean) as object[];
 ---
-<Layout c={c} path={'/' + page.slug} title={page.title[lang]} description={page.description[lang]} jsonLd={jsonLd}>
+<Layout c={c} path={path} title={page.title[lang]} description={page.description[lang]} jsonLd={jsonLd}>
   {pp && <PetitPlanetTheme slot="head" />}
-  <nav class="crumbs small muted"><a href={L('/')}>{S.home}</a> › {page.name}</nav>
+  <nav class="crumbs small muted"><a href={L('/')}>{S.home}</a> › {isSub ? <a href={L('/' + page.slug)}>{page.name}</a> : page.name}{isSub && <> › {page.crumb?.[lang]}</>}</nav>
   <article class:list={["gp", { "theme-pp": pp }]} style={`--g:${pp ? '#ff8fab' : game?.color ?? 'var(--accent)'}`}>
-    {pp && (
+    {subnav.length > 0 && (
+      <nav class="subnav" aria-label={page.name}>
+        {subnav.map((n) => <a href={L(n.path)} aria-current={n.path === path ? 'page' : undefined}>{n.label[lang]}</a>)}
+      </nav>
+    )}
+    {pp && !isSub && (
       <svg class="pp-art" viewBox="0 0 120 120" aria-hidden="true">
         <circle cx="60" cy="72" r="38" fill="#9fd8b8" /><path d="M24 80a38 38 0 0 0 72 0c-12 8-60 8-72 0z" fill="#7cc4a0" />
         <circle cx="46" cy="64" r="5" fill="#fff" opacity=".5" /><ellipse cx="60" cy="72" rx="56" ry="10" fill="none" stroke="#ffc6d6" stroke-width="4" transform="rotate(-12 60 72)" />
@@ -42,26 +56,36 @@ const jsonLd = [
     <h1>{page.h1[lang]}</h1>
     <p class="lede">{page.lede[lang]}</p>
     <p class="muted small">{S.updated}: <time datetime={page.updated}>{fmt(page.updated)}</time></p>
-    {page.release && days !== undefined && (
+    {!isSub && page.release && days !== undefined && (
       <div class="countdown">
         <span class="muted small">{S.launch}</span>
         <b>{fmt(page.release)}</b>
         <span>{days > 0 ? t('days_left', { n: days }) : t('released')}</span>
       </div>
     )}
-    <h2>{S.facts}</h2>
-    <div class="table-wrap"><table class="facts"><tbody>
-      {page.facts.map((f) => <tr><th>{f.label[lang]}</th><td>{f.value[lang]}</td></tr>)}
-    </tbody></table></div>
-    {page.sections.map((s) => (<section id={s.id}><h2>{s.h[lang]}</h2><Fragment set:html={s.html[lang]} /></section>))}
-    <h2 id="faq">{S.faq}</h2>
-    {page.faq.map((f) => (<details class="faq"><summary>{f.q[lang]}</summary><p>{f.a[lang]}</p></details>))}
-    <h2 id="sources">{S.sources}</h2>
-    <ul class="sources small">{page.sources.map((s) => <li><a href={s.url} rel="noopener nofollow" target="_blank">{s.label}</a></li>)}</ul>
+    {facts.length > 0 && <h2>{S.facts}</h2>}
+    {facts.length > 0 && <div class="table-wrap"><table class="facts"><tbody>
+      {facts.map((f) => <tr><th>{f.label[lang]}</th><td>{f.value[lang]}</td></tr>)}
+    </tbody></table></div>}
+    {page.sections.map((s) => (<section id={s.id}><h2>{s.h[lang]}</h2><Fragment set:html={fill(s.html[lang])} /></section>))}
+    {faq.length > 0 && <h2 id="faq">{S.faq}</h2>}
+    {faq.map((f) => (<details class="faq"><summary>{f.q[lang]}</summary><p>{f.a[lang]}</p></details>))}
+    {page.sources.length > 0 && <h2 id="sources">{S.sources}</h2>}
+    {page.sources.length > 0 && <ul class="sources small">{page.sources.map((s) => <li><a href={s.url} rel="noopener nofollow" target="_blank">{s.label}</a></li>)}</ul>}
   </article>
 </Layout>
 <style>
   .pp-art { width: 96px; height: 96px; float: right; margin: 0 0 8px 12px; }
+  .subnav { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 16px; }
+  .subnav a { padding: 5px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--text); font-size: .9rem; font-weight: 600; }
+  .subnav a[aria-current="page"] { background: var(--g); border-color: var(--g); color: #fff; }
+  .subnav a:hover { text-decoration: none; border-color: var(--g); }
+  .gp :global(.cards) { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); margin: 10px 0; }
+  .gp :global(.ncard) { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; }
+  .gp :global(.ncard h3) { margin: 0 0 2px; font-size: 1.05rem; }
+  .gp :global(.ncard p) { margin: 4px 0 0; font-size: .9rem; }
+  .gp :global(.ncard .role) { color: var(--g); font-weight: 700; font-size: .9rem; }
+  .gp :global(.note) { font-size: .88rem; color: var(--muted); border-left: 3px solid var(--g); padding: 4px 10px; }
   .crumbs { margin: 8px 0 4px; }
   .crumbs a { color: inherit; }
   .gp h1 { border-left: 4px solid var(--g); padding-left: 12px; }

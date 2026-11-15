@@ -38,9 +38,9 @@ export const petitPlanet: GamePageContent = {
       id: 'what',
       h: { en: 'What is Petit Planet?', es: '¿Qué es Petit Planet?', pt: 'O que é Petit Planet?' },
       html: {
-        en: '<p>You play a <b>Planet Tender</b> who travels the Starsea with Oumuamua, a Starsea Spirit. You plant a <b>Luca Seed</b> that grows into a <b>Luca Arbor</b>, and as it grows your planet\'s landscape, seasons and ecosystem change.</p><p>Neighbors move in over time, each with their own story. The first two are Planet Coordinator <b>Mobai</b> and Starsea Racer <b>Elsasani</b>. You can sail the Starsea to explore small islets, and visit the <b>Galactic Bazaar</b> for minigames, auctions and sharing your creations.</p>',
-        es: '<p>Eres un <b>Cuidador de Planetas</b> que viaja por el Mar Estelar con Oumuamua, un Espíritu del Mar Estelar. Plantas una <b>Semilla Luca</b> que crece hasta convertirse en un <b>Árbol Luca</b>, y a medida que crece cambian el paisaje, las estaciones y el ecosistema de tu planeta.</p><p>Con el tiempo llegan vecinos, cada uno con su historia. Los dos primeros son <b>Mobai</b>, coordinador planetario, y <b>Elsasani</b>, corredora del Mar Estelar. Puedes navegar por el Mar Estelar para explorar islotes y visitar el <b>Bazar Galáctico</b>, con minijuegos, subastas y un sitio para compartir tus creaciones.</p>',
-        pt: '<p>Você é um <b>Cuidador de Planetas</b> que viaja pelo Mar Estelar com Oumuamua, um Espírito do Mar Estelar. Você planta uma <b>Semente Luca</b> que cresce e vira uma <b>Árvore Luca</b>, e conforme ela cresce mudam a paisagem, as estações e o ecossistema do seu planeta.</p><p>Com o tempo chegam vizinhos, cada um com sua história. Os dois primeiros são <b>Mobai</b>, coordenador planetário, e <b>Elsasani</b>, corredora do Mar Estelar. Dá para navegar pelo Mar Estelar para explorar ilhotas e visitar o <b>Bazar Galáctico</b>, com minijogos, leilões e um lugar para compartilhar suas criações.</p>',
+        en: '<p>You play a <b>Planet Tender</b> who travels the Starsea with Oumuamua, a Starsea Spirit. You plant a <b>Luca Seed</b> that grows into a <b>Luca Arbor</b>, and as it grows your planet\'s landscape, seasons and ecosystem change.</p><p>Neighbors move in over time, each with their own story. The first two are Planet Coordinator <b>Mobai</b> and Starsea Racer <b>Elsasani</b>. You can sail the Starsea to explore small islets, and visit the <b>Galactic Bazaar</b> for minigames, auctions and sharing your creations.</p><p>More in our <a href="{L}/petit-planet/guide">beginner guide</a> and the <a href="{L}/petit-planet/neighbors">list of Neighbors</a>.</p>',
+        es: '<p>Eres un <b>Cuidador de Planetas</b> que viaja por el Mar Estelar con Oumuamua, un Espíritu del Mar Estelar. Plantas una <b>Semilla Luca</b> que crece hasta convertirse en un <b>Árbol Luca</b>, y a medida que crece cambian el paisaje, las estaciones y el ecosistema de tu planeta.</p><p>Con el tiempo llegan vecinos, cada uno con su historia. Los dos primeros son <b>Mobai</b>, coordinador planetario, y <b>Elsasani</b>, que compite en carreras por el Mar Estelar. Puedes navegar por el Mar Estelar para explorar islotes y visitar el <b>Bazar Galáctico</b>, con minijuegos, subastas y un sitio para compartir tus creaciones.</p><p>Más detalles en la <a href="{L}/petit-planet/guide">guía para empezar</a> y en la <a href="{L}/petit-planet/neighbors">lista de vecinos</a>.</p>',
+        pt: '<p>Você é um <b>Cuidador de Planetas</b> que viaja pelo Mar Estelar com Oumuamua, um Espírito do Mar Estelar. Você planta uma <b>Semente Luca</b> que cresce e vira uma <b>Árvore Luca</b>, e conforme ela cresce mudam a paisagem, as estações e o ecossistema do seu planeta.</p><p>Com o tempo chegam vizinhos, cada um com sua história. Os dois primeiros são <b>Mobai</b>, coordenador planetário, e <b>Elsasani</b>, que disputa corridas pelo Mar Estelar. Dá para navegar pelo Mar Estelar para explorar ilhotas e visitar o <b>Bazar Galáctico</b>, com minijogos, leilões e um lugar para compartilhar suas criações.</p><p>Mais detalhes no <a href="{L}/petit-planet/guide">guia para começar</a> e na <a href="{L}/petit-planet/neighbors">lista de vizinhos</a>.</p>',
       },
     },
     {
@@ -63,11 +63,11 @@ export const petitPlanet: GamePageContent = {
     },
     {
       id: 'betas',
-      h: { en: 'Closed betas so far', es: 'Betas cerradas hasta ahora', pt: 'Betas fechados até agora' },
+      h: { en: 'Closed betas', es: 'Betas cerradas', pt: 'Betas fechados' },
       html: {
-        en: '<p>HoYoverse ran two closed betas before announcing the launch date: the <b>Coziness Test</b>, which started on 7 November 2025, and the <b>Stardrift Test</b> in April 2026, which added new Neighbors and expanded Starsea voyages. There is no open beta: the next step is the full launch.</p>',
-        es: '<p>HoYoverse hizo dos betas cerradas antes de anunciar la fecha: la <b>Coziness Test</b>, que empezó el 7 de noviembre de 2025, y la <b>Stardrift Test</b> en abril de 2026, que añadió vecinos nuevos y amplió los viajes por el Mar Estelar. No hay beta abierta: lo siguiente es el lanzamiento.</p>',
-        pt: '<p>A HoYoverse fez dois betas fechados antes de anunciar a data: o <b>Coziness Test</b>, que começou em 7 de novembro de 2025, e o <b>Stardrift Test</b> em abril de 2026, que trouxe novos vizinhos e ampliou as viagens pelo Mar Estelar. Não há beta aberto: o próximo passo é o lançamento.</p>',
+        en: '<p>HoYoverse ran three closed betas: the <b>Coziness Test</b> (November 2025), the <b>Stardrift Test</b> (April 2026) and the <b>Final Beta</b> (September 2026), which added winter, a seasonal story, batch cooking and flower crossbreeding. All have ended and beta progress was wiped. <a href="{L}/petit-planet/betas">What each beta added</a>.</p>',
+        es: '<p>HoYoverse hizo tres betas cerradas: la <b>Coziness Test</b> (noviembre de 2025), la <b>Stardrift Test</b> (abril de 2026) y la <b>beta final</b> (septiembre de 2026), que añadió el invierno, una historia de temporada, la cocina por lotes y el cruce de flores. Todas han terminado y el progreso se borró. <a href="{L}/petit-planet/betas">Qué añadió cada beta</a>.</p>',
+        pt: '<p>A HoYoverse fez três betas fechados: o <b>Coziness Test</b> (novembro de 2025), o <b>Stardrift Test</b> (abril de 2026) e o <b>beta final</b> (setembro de 2026), que trouxe o inverno, uma história sazonal, o preparo em lote e o cruzamento de flores. Todos já terminaram e o progresso foi apagado. <a href="{L}/petit-planet/betas">O que cada beta trouxe</a>.</p>',
       },
     },
     {
@@ -97,12 +97,38 @@ export const petitPlanet: GamePageContent = {
       q: { en: 'Does Petit Planet have cross-progression?', es: '¿Petit Planet tiene progreso cruzado?', pt: 'Petit Planet tem progresso cruzado?' },
       a: { en: 'Yes, progress carries over between PC and mobile.', es: 'Sí, el progreso se comparte entre PC y móvil.', pt: 'Sim, o progresso é compartilhado entre PC e celular.' },
     },
+    {
+      q: { en: 'Can I pre-download Petit Planet?', es: '¿Se puede predescargar Petit Planet?', pt: 'Dá para pré-baixar Petit Planet?' },
+      a: { en: 'Not yet. HoYoverse has not announced pre-download. In its other games it usually opens one or two days before launch.', es: 'Todavía no. HoYoverse no ha anunciado la predescarga. En sus otros juegos suele abrirla uno o dos días antes del lanzamiento.', pt: 'Ainda não. A HoYoverse não anunciou o pré-download. Nos outros jogos dela, ele costuma abrir um ou dois dias antes do lançamento.' },
+    },
+    {
+      q: { en: 'Where can I download it on PC?', es: '¿Dónde se descarga en PC?', pt: 'Onde baixar no PC?' },
+      a: { en: 'On PC it will be on the HoYoPlay launcher and the Epic Games Store.', es: 'En PC estará en el launcher HoYoPlay y en la Epic Games Store.', pt: 'No PC estará no launcher HoYoPlay e na Epic Games Store.' },
+    },
+    {
+      q: { en: 'Is there a beta I can join?', es: '¿Hay alguna beta a la que pueda apuntarme?', pt: 'Tem algum beta em que eu possa entrar?' },
+      a: { en: 'No. The three closed betas have ended. The next step is the launch on 4 December.', es: 'No. Las tres betas cerradas ya terminaron. Lo siguiente es el lanzamiento del 4 de diciembre.', pt: 'Não. Os três betas fechados já terminaram. O próximo passo é o lançamento em 4 de dezembro.' },
+    },
+    {
+      q: { en: 'Is Petit Planet multiplayer?', es: '¿Petit Planet es multijugador?', pt: 'Petit Planet é multijogador?' },
+      a: { en: 'Yes. You can visit other players\' planets, meet in the Galactic Bazaar and exchange anonymous Star Notes. Your own planet is yours to tend, and you set what visitors can do.', es: 'Sí. Puedes visitar los planetas de otros jugadores, quedar en el Bazar Galáctico e intercambiar Notas Estelares anónimas. Tu planeta es solo tuyo, y tú decides qué pueden hacer las visitas.', pt: 'Sim. Você pode visitar os planetas de outros jogadores, se encontrar no Bazar Galáctico e trocar Notas Estelares anônimas. Seu planeta é só seu, e você decide o que os visitantes podem fazer.' },
+    },
+    {
+      q: { en: 'Is there combat?', es: '¿Tiene combate?', pt: 'Tem combate?' },
+      a: { en: 'No. Petit Planet is a life sim without combat.', es: 'No. Petit Planet es un simulador de vida sin combate.', pt: 'Não. Petit Planet é um simulador de vida sem combate.' },
+    },
+    {
+      q: { en: 'Are there Petit Planet codes?', es: '¿Hay códigos de Petit Planet?', pt: 'Existem códigos de Petit Planet?' },
+      a: { en: 'Not before launch. We will list them on our codes page from 4 December.', es: 'No antes del lanzamiento. Los pondremos en nuestra página de códigos a partir del 4 de diciembre.', pt: 'Não antes do lançamento. Vamos listá-los na nossa página de códigos a partir de 4 de dezembro.' },
+    },
   ],
   sources: [
     { label: 'PocketGamer.biz: Petit Planet sets December 4th release date', url: 'https://www.pocketgamer.biz/hoyoverses-petit-planet-sets-december-4th-release-date/' },
     { label: 'PocketGamer.biz: Petit Planet entering closed beta on November 7th', url: 'https://www.pocketgamer.biz/hoyoverses-petit-planet-entering-closed-beta-on-november-7th' },
     { label: 'Siliconera: Petit Planet Stardrift closed beta test starts in April', url: 'https://siliconera.com/petit-planet-stardrift-closed-beta-test-starts-in-april/' },
     { label: 'PocketGamer.biz: closed beta features new neighbours and enhanced Starsea Voyages', url: 'https://www.pocketgamer.biz/closed-beta-for-hoyoverses-petit-planet-will-feature-new-neighbours-and-enhanced-starsea-voyages' },
+    { label: 'Siliconera: final beta test gets winter and Season of Snowfall', url: 'https://www.siliconera.com/petit-planet-final-beta-test-gets-winter-and-season-of-snowfall/' },
+    { label: 'Massively OP: Petit Planet introduces its characters, gameplay and multiplayer', url: 'https://massivelyop.com/2026/11/04/petit-planet-introduces-its-characters-gameplay-and-multiplayer-activities-ahead-of-its-december-launch/' },
     { label: 'MMOBomb: HoYoverse drops launch date for cozy MMO Petit Planet', url: 'https://www.mmobomb.com/news/hoyoverse-drops-launch-date-cozy-mmo-petit-planet' },
   ],
 };

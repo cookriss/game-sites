@@ -1,0 +1,26 @@
+---
+import GamePage from '../../../components/GamePage.astro';
+import { langParams } from '@gamesites/core/lib/i18n';
+import { ctx, SITE } from '../../../lib/site';
+import { PP_LIVE_TABLES, type DbTable } from '../../../content/petit-planet-db';
+import type { GamePageContent, Lang } from '../../../content/types';
+
+// Only tables that already have rows are built (none before launch day).
+export function getStaticPaths() {
+  return langParams(SITE).flatMap((p) => PP_LIVE_TABLES.map((t) => ({ params: { ...p.params, table: t.id }, props: { table: t } })));
+}
+const { table } = Astro.props as { table: DbTable };
+const c = ctx(Astro.params.lang);
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const cell = (v: string | Record<Lang, string> | undefined, lang: Lang) => esc(typeof v === 'string' ? v : v?.[lang] ?? '');
+const html = Object.fromEntries((['en', 'es', 'pt'] as Lang[]).map((lang) => [lang,
+  '<div class="table-wrap"><table class="facts"><thead><tr>' + table.columns.map((col) => `<th>${esc(col.label[lang])}</th>`).join('') + '</tr></thead><tbody>'
+  + table.rows.map((r) => '<tr>' + table.columns.map((col) => `<td>${cell(r[col.key], lang)}</td>`).join('') + '</tr>').join('')
+  + '</tbody></table></div>'])) as Record<Lang, string>;
+const page: GamePageContent = {
+  slug: 'petit-planet', path: `/petit-planet/${table.id}`, crumb: table.h1, name: 'Petit Planet', updated: new Date().toISOString().slice(0, 10),
+  title: table.title, description: table.description, h1: table.h1, lede: table.lede,
+  sections: [{ id: 'table', h: table.h1, html }], sources: [],
+};
+---
+<GamePage c={c} page={page} />
