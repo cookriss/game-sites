@@ -3,6 +3,7 @@ import Layout from './Layout.astro';
 import type { GamePageContent } from '../content/types';
 import { BUILD_DATE, type Ctx } from '../lib/site';
 import { GAMES } from '../games';
+import PetitPlanetTheme from '../themes/PetitPlanetTheme.astro';
 interface Props { c: Ctx; page: GamePageContent }
 const { c, page } = Astro.props;
 const { lang, L, t } = c;
@@ -11,6 +12,7 @@ const S = {
   es: { home: 'Inicio', updated: 'Actualizado', facts: 'Datos clave', faq: 'Preguntas frecuentes', sources: 'Fuentes', launch: 'Lanzamiento' },
   pt: { home: 'Início', updated: 'Atualizado', facts: 'Dados principais', faq: 'Perguntas frequentes', sources: 'Fontes', launch: 'Lançamento' },
 }[lang];
+const pp = page.slug === 'petit-planet';
 const game = GAMES.find((g) => g.slug === page.slug);
 const fmt = (iso: string) => new Intl.DateTimeFormat(c.locale.lang, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(iso + 'T00:00:00Z'));
 const days = page.release ? Math.ceil((Date.parse(page.release + 'T00:00:00Z') - BUILD_DATE.getTime()) / 86400000) : undefined;
@@ -26,8 +28,17 @@ const jsonLd = [
 ];
 ---
 <Layout c={c} path={'/' + page.slug} title={page.title[lang]} description={page.description[lang]} jsonLd={jsonLd}>
+  {pp && <PetitPlanetTheme slot="head" />}
   <nav class="crumbs small muted"><a href={L('/')}>{S.home}</a> › {page.name}</nav>
-  <article class="gp" style={`--g:${game?.color ?? 'var(--accent)'}`}>
+  <article class:list={["gp", { "theme-pp": pp }]} style={`--g:${pp ? '#ff8fab' : game?.color ?? 'var(--accent)'}`}>
+    {pp && (
+      <svg class="pp-art" viewBox="0 0 120 120" aria-hidden="true">
+        <circle cx="60" cy="72" r="38" fill="#9fd8b8" /><path d="M24 80a38 38 0 0 0 72 0c-12 8-60 8-72 0z" fill="#7cc4a0" />
+        <circle cx="46" cy="64" r="5" fill="#fff" opacity=".5" /><ellipse cx="60" cy="72" rx="56" ry="10" fill="none" stroke="#ffc6d6" stroke-width="4" transform="rotate(-12 60 72)" />
+        <path d="M60 34v-14" stroke="#7a5c3e" stroke-width="4" stroke-linecap="round" /><path d="M60 22c-10-10-22-4-22 4 10 2 18 0 22-4zM60 20c8-12 22-8 22 0-10 3-18 2-22 0z" fill="#8fd17a" />
+        <path d="M100 18l2 6 6 2-6 2-2 6-2-6-6-2 6-2z" fill="#ffd27a" /><path d="M16 30l1.5 4 4 1.5-4 1.5-1.5 4-1.5-4-4-1.5 4-1.5z" fill="#fff" />
+      </svg>
+    )}
     <h1>{page.h1[lang]}</h1>
     <p class="lede">{page.lede[lang]}</p>
     <p class="muted small">{S.updated}: <time datetime={page.updated}>{fmt(page.updated)}</time></p>
@@ -50,6 +61,7 @@ const jsonLd = [
   </article>
 </Layout>
 <style>
+  .pp-art { width: 96px; height: 96px; float: right; margin: 0 0 8px 12px; }
   .crumbs { margin: 8px 0 4px; }
   .crumbs a { color: inherit; }
   .gp h1 { border-left: 4px solid var(--g); padding-left: 12px; }

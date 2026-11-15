@@ -1,0 +1,39 @@
+---
+/** Petit Planet look: soft pastel sky, rounded type, stars. Original CSS and SVG only, no official art. */
+---
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap" />
+<style is:global>
+  :root:has(.theme-pp) {
+    --bg: #eef3ff; --bg2: #ffffffcc; --panel: #fffdf7; --line: #dcd6f2; --text: #3b3561; --muted: #7a73a0;
+    --link: #6b5bd6; --accent: #ff8fab; --good: #7fcf9f; --radius: 18px;
+    color-scheme: light;
+  }
+  :root:has(.theme-pp) body {
+    font-family: Nunito, ui-rounded, "Segoe UI", system-ui, sans-serif;
+    background:
+      radial-gradient(2px 2px at 12% 18%, #fff 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 78% 9%, #fff 50%, transparent 51%),
+      radial-gradient(2px 2px at 64% 26%, #fff 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 30% 6%, #fff 50%, transparent 51%),
+      radial-gradient(2px 2px at 90% 30%, #fff 50%, transparent 51%),
+      linear-gradient(180deg, #c9d8ff 0px, #e6dcff 320px, #fdeef4 640px, #eef3ff 1000px) no-repeat;
+    background-color: #eef3ff;
+  }
+  :root:has(.theme-pp) .site-header { background: #ffffffb3; backdrop-filter: blur(8px); border-bottom: 0; box-shadow: 0 2px 16px #8f86c933; }
+  :root:has(.theme-pp) .brand { color: #ff7a9c; font-weight: 900; }
+  :root:has(.theme-pp) h1, :root:has(.theme-pp) h2 { font-weight: 900; letter-spacing: .005em; }
+  :root:has(.theme-pp) h2 { color: #5a4bc4; display: flex; align-items: center; gap: 8px; }
+  :root:has(.theme-pp) h2::before { content: ""; width: 14px; height: 14px; flex: none; background: #ffd27a;
+    clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+  :root:has(.theme-pp) .table-wrap { border-radius: 18px; box-shadow: 0 4px 18px #8f86c922; border-color: #e7e1fb; }
+  :root:has(.theme-pp) th { background: #f4f0ff; color: #7a6fc0; }
+  :root:has(.theme-pp) .faq { background: var(--panel); border-color: #e7e1fb; border-radius: 16px; box-shadow: 0 2px 10px #8f86c91a; }
+  :root:has(.theme-pp) .gp section, :root:has(.theme-pp) .gp > .sources { background: #fffdf7d9; border-radius: 20px; padding: 4px 18px 10px; margin: 16px 0; box-shadow: 0 4px 18px #8f86c91a; }
+  :root:has(.theme-pp) .gp section h2 { margin-top: 16px; }
+  :root:has(.theme-pp) b { color: #5a4bc4; }
+  :root:has(.theme-pp) .countdown { background: linear-gradient(135deg, #fff4f8, #f1edff); border: 0; border-radius: 20px; box-shadow: 0 4px 18px #ff8fab33; }
+  :root:has(.theme-pp) .countdown b { color: #ff6f94; }
+  :root:has(.theme-pp) .site-footer { background: transparent; }
+</style>

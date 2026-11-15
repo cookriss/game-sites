@@ -10,7 +10,7 @@ export const SITE: SiteConfig = {
   adsenseClient: process.env.ADSENSE_CLIENT || '',
   cfAnalyticsToken: process.env.CF_ANALYTICS_TOKEN || '',
   owner: OWNER,
-  publishers: ['Digital Extremes', 'HoYoverse', 'Elementa', 'NetEase', 'Chucklefish'],
+  publishers: [ 'HoYoverse', 'Elementa', 'NetEase', 'Chucklefish'],
   locales: [
     { prefix: '', lang: 'en', label: 'English' },
     { prefix: 'es', lang: 'es', label: 'Español' },

@@ -7,6 +7,7 @@ interface Props { c: Ctx; path: string; title: string; description: string; json
 const { c, path, title, description, jsonLd, ogImage, alternateLocales, ad = true, noindex = false, localized = true } = Astro.props;
 ---
 <BaseLayout site={c.site} locale={c.locale} path={path} title={title} description={description} nav={c.nav} strings={c.strings} jsonLd={jsonLd} ogImage={ogImage} alternateLocales={alternateLocales} noindex={noindex} localized={localized}>
+  <slot name="head" slot="head" />
   <slot />
   {ad && <AdSlot site={c.site} />}
 </BaseLayout>

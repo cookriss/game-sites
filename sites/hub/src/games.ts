@@ -14,14 +14,6 @@ export interface Game {
 
 export const GAMES: Game[] = [
   {
-    slug: 'soulframe', name: 'Soulframe', publisher: 'Digital Extremes', status: 'soon', platforms: 'PC', color: '#7a9a6a',
-    blurb: {
-      en: 'Free fantasy action RPG from the makers of Warframe. Open to every PC player since 6 November 2026.',
-      es: 'RPG de acción de fantasía gratuito de los creadores de Warframe. Abierto a todos en PC desde el 6 de noviembre de 2026.',
-      pt: 'RPG de ação de fantasia gratuito dos criadores de Warframe. Aberto a todos no PC desde 6 de novembro de 2026.',
-    },
-  },
-  {
     slug: 'petit-planet', name: 'Petit Planet', publisher: 'HoYoverse', release: '2026-12-04', status: 'live', platforms: 'PC, iOS, Android', color: '#6fb6d6',
     blurb: {
       en: 'Free cozy life-sim MMO from the studio behind Genshin Impact.',
