@@ -28,6 +28,11 @@ const url = c.site.url + L(path);
 const faq = page.faq ?? [];
 const facts = page.facts ?? [];
 const subnav = SECTION_NAV[page.slug] ?? [];
+const here = (p: string) => p === path || (p !== '/' + page.slug && path.startsWith(p + '/'));
+const sideGroups = [
+  { h: { en: 'Guides', es: 'Guías', pt: 'Guias' }[lang], items: subnav.filter((n) => !n.path.includes('/database/')) },
+  { h: { en: 'Lists', es: 'Listas', pt: 'Listas' }[lang], items: subnav.filter((n) => n.path.includes('/database/')) },
+].filter((g) => g.items.length);
 const explore = subnav.filter((n) => n.blurb).sort((a, b) => Number(!!a.soon) - Number(!!b.soon));
 /** Content HTML writes internal links as {L}/path so they get the locale prefix. */
 const fill = (h: string) => h.replace(/\{L\}(\/[^"]*)/g, (_m, p: string) => L(p));
@@ -43,11 +48,29 @@ const jsonLd = [
   { '@context': 'https://schema.org', '@type': 'Article', headline: page.h1[lang], dateModified: page.updated, inLanguage: c.locale.lang, mainEntityOfPage: url },
 ].filter(Boolean) as object[];
 ---
-<Layout c={c} section={{ brand: { label: page.name, href: L('/' + page.slug) }, favicon: GAME_ICONS[page.slug] ? `/brand/games/${page.slug}.svg` : undefined, nav: subnav.map((n) => ({ href: L(n.path), label: n.label[lang] })) }} path={path} title={page.title[lang]} description={page.description[lang]} jsonLd={jsonLd} noindex={page.noindex}>
+<Layout c={c} section={{ brand: { label: page.name, href: L('/' + page.slug) }, favicon: GAME_ICONS[page.slug] ? `/brand/games/${page.slug}.svg` : undefined, nav: [] }} path={path} title={page.title[lang]} description={page.description[lang]} jsonLd={jsonLd} noindex={page.noindex}>
   {pp && <PetitPlanetTheme slot="head" />}
   {an && <AnantaTheme slot="head" />}
   {GAME_ICONS[page.slug] && <Fragment slot="brand-icon" set:html={inlineSvg(GAME_ICONS[page.slug], 'brand-icon')} />}
   {isSub && <nav class="crumbs small muted"><a href={L('/' + page.slug)}>{page.name}</a>{page.parent && <> › <a href={L(page.parent.path)}>{page.parent.label[lang]}</a></>} › {page.crumb?.[lang]}</nav>}
+  <div class:list={['with-side', { 'no-side': !subnav.length }]}>
+  {subnav.length > 0 && (
+    <aside class="side-nav" aria-label={page.name}>
+      {sideGroups.map((g) => (
+        <div class="side-group">
+          <p class="side-h">{g.h}</p>
+          {g.items.map((n) => (
+            <a href={L(n.path)} aria-current={here(n.path) ? 'page' : undefined}>
+              {n.icon ? <Fragment set:html={icon(n.icon, 22)} /> : GAME_ICONS[page.slug] ? <Fragment set:html={inlineSvg(GAME_ICONS[page.slug], 'cat-icon', 22)} /> : null}
+              <span>{n.label[lang]}</span>
+              {n.soon && game?.release && <em>{fmtShort(game.release)}</em>}
+            </a>
+          ))}
+        </div>
+      ))}
+    </aside>
+  )}
+  <div class="side-main">
   <article class:list={["gp", { "theme-pp": pp, "theme-an": an }]} style={`--g:${pp ? '#ff8fab' : an ? '#ff4fa3' : game?.color ?? 'var(--accent)'}`}>
 <header class:list={["hero", { "hero-main": !isSub }]}>
 <div class="hero-text">
@@ -87,8 +110,30 @@ const jsonLd = [
     {page.sources.length > 0 && <h2 id="sources">{S.sources}</h2>}
     {page.sources.length > 0 && <ul class="sources small">{page.sources.map((s) => <li><a href={s.url} rel="noopener nofollow" target="_blank">{s.label}</a></li>)}</ul>}
   </article>
+  </div>
+  </div>
 </Layout>
 <style>
+  .with-side { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 24px; align-items: start; }
+  .with-side.no-side { display: block; }
+  .side-nav { position: sticky; top: 72px; max-height: calc(100vh - 88px); overflow-y: auto; margin-top: 12px; padding: 10px 8px; border-radius: 20px; background: var(--panel); border: 1px solid var(--line); box-shadow: 0 4px 18px color-mix(in srgb, var(--g, #8f86c9) 14%, transparent); }
+  .side-group + .side-group { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); }
+  .side-h { margin: 2px 10px 4px; font-size: .7rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .side-nav a { display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 12px; color: var(--text); font-weight: 700; font-size: .92rem; }
+  .side-nav a span { flex: 1; }
+  .side-nav a:hover { text-decoration: none; background: color-mix(in srgb, #ff8fab 12%, transparent); }
+  .side-nav a[aria-current="page"] { background: #ff8fab; color: #fff; }
+  .side-nav a :global(.cat-icon) { flex: none; border-radius: 6px; }
+  .side-nav em { font-style: normal; font-size: .68rem; font-weight: 800; color: var(--muted); }
+  .side-nav a[aria-current="page"] em { color: #fff; }
+  @media (max-width: 860px) {
+    .with-side { display: block; }
+    .side-nav { position: static; max-height: none; margin: 8px -16px 4px; padding: 6px 16px; border-radius: 0; border-width: 1px 0; display: flex; overflow-x: auto; gap: 4px; box-shadow: none; }
+    .side-group { display: contents; }
+    .side-h { display: none; }
+    .side-nav a { flex: none; white-space: nowrap; padding: 5px 10px; }
+    .side-nav em { display: none; }
+  }
   .hero { display: flex; gap: 16px; align-items: flex-start; }
   .hero-text { flex: 1; min-width: 0; }
   .hero-main { padding: 22px 22px 12px; margin: 4px 0 18px; border-radius: 24px; background: linear-gradient(135deg, color-mix(in srgb, var(--g) 16%, var(--panel)), var(--panel)); border: 1px solid var(--line); }

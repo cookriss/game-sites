@@ -11,6 +11,7 @@ interface Props {
   section?: { brand: NavItem; nav: NavItem[]; favicon?: string };
 }
 const { c, path, title, description, jsonLd, ogImage, alternateLocales, ad = true, noindex = false, localized = true, section } = Astro.props;
+/** Game sections with a sidebar menu pass an empty header nav */
 const nav = section ? section.nav : c.nav;
 const strings = section ? { ...c.strings, network: { href: c.L('/'), label: c.t('network_credit', { name: c.site.name }) } } : c.strings;
 ---
