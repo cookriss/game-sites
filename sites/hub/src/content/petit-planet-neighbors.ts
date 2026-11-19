@@ -6,7 +6,7 @@ import { avatar, type Species } from './pp/art';
  * Birthdays, species and home galaxies come from beta builds and character teasers:
  * the page says they may change at launch.
  */
-interface Neighbor {
+export interface Neighbor {
   name: string;
   aka?: string;
   role: L;
@@ -21,7 +21,7 @@ interface Neighbor {
   note?: L;
 }
 
-const NEIGHBORS: Neighbor[] = [
+export const NEIGHBORS: Neighbor[] = [
   { name: 'Mobai', kind: 'dog', role: { en: 'Life Coordinator', es: 'Coordinador de vida', pt: 'Coordenador de vida' }, birthday: '02-19', species: { en: 'Dog', es: 'Perro', pt: 'Cachorro' },
     note: { en: 'Your first contact. He represents the company that registers your planet and helps you settle in.', es: 'Tu primer contacto. Representa a la empresa que registra tu planeta y te ayuda a instalarte.', pt: 'Seu primeiro contato. Representa a empresa que registra seu planeta e ajuda você a se instalar.' } },
   { name: 'Elsasani', aka: 'Esassani', role: { en: 'Starsea Racer', es: 'Carreras por el Mar Estelar', pt: 'Corridas pelo Mar Estelar' }, birthday: '02-14',
@@ -83,7 +83,7 @@ export const petitPlanetNeighbors: GamePageContent = {
   path: '/petit-planet/neighbors',
   crumb: { en: 'Neighbors', es: 'Vecinos', pt: 'Vizinhos' },
   name: 'Petit Planet',
-  updated: '2026-11-15',
+  updated: '2026-11-19',
   title: {
     en: `Petit Planet Neighbors: All ${count} Known Characters, Roles and Birthdays`,
     es: `Vecinos de Petit Planet: los ${count} personajes conocidos, profesiones y cumpleaños`,
@@ -105,9 +105,9 @@ export const petitPlanetNeighbors: GamePageContent = {
       id: 'list',
       h: { en: 'All known Neighbors', es: 'Todos los vecinos conocidos', pt: 'Todos os vizinhos conhecidos' },
       html: {
-        en: cards('en') + '<p class="note">Birthdays and galaxies come from the betas and character teasers and could change at launch. We will update this list, and add each Neighbor\'s favorite gifts, from 4 December.</p>',
-        es: cards('es') + '<p class="note">Los cumpleaños y las galaxias vienen de las betas y de los avances de personajes, y podrían cambiar en el lanzamiento. Actualizaremos la lista, y añadiremos los regalos favoritos de cada vecino, a partir del 4 de diciembre.</p>',
-        pt: cards('pt') + '<p class="note">Os aniversários e as galáxias vêm dos betas e das prévias de personagens, e podem mudar no lançamento. Vamos atualizar a lista, e adicionar os presentes favoritos de cada vizinho, a partir de 4 de dezembro.</p>',
+        en: cards('en') + '<p class="note">Birthdays and galaxies come from the betas and character teasers and could change at launch. We will update this list, and add each Neighbor\'s favorite gifts, from 4 December. See every date in the <a href="{L}/petit-planet/birthdays">birthday calendar</a>.</p>',
+        es: cards('es') + '<p class="note">Los cumpleaños y las galaxias vienen de las betas y de los avances de personajes, y podrían cambiar en el lanzamiento. Actualizaremos la lista, y añadiremos los regalos favoritos de cada vecino, a partir del 4 de diciembre. Todas las fechas en el <a href="{L}/petit-planet/birthdays">calendario de cumpleaños</a>.</p>',
+        pt: cards('pt') + '<p class="note">Os aniversários e as galáxias vêm dos betas e das prévias de personagens, e podem mudar no lançamento. Vamos atualizar a lista, e adicionar os presentes favoritos de cada vizinho, a partir de 4 de dezembro. Todas as datas no <a href="{L}/petit-planet/birthdays">calendário de aniversários</a>.</p>',
       },
     },
     {

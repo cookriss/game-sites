@@ -3,6 +3,7 @@ import Layout from '../../components/Layout.astro';
 import { langParams } from '@gamesites/core/lib/i18n';
 import { ctx, SITE, BUILD_DATE } from '../../lib/site';
 import { GAMES } from '../../games';
+import { GAME_ICONS, inlineSvg } from '../../brand';
 export function getStaticPaths() { return langParams(SITE); }
 const c = ctx(Astro.params.lang);
 const { t, L, lang } = c;
@@ -28,6 +29,7 @@ const jsonLd = [
       const Tag = live ? 'a' : 'div';
       return (
         <Tag class="game-card" href={live ? L(`/${g.slug}`) : undefined} style={`--g:${g.color}`}>
+          {GAME_ICONS[g.slug] && <Fragment set:html={inlineSvg(GAME_ICONS[g.slug], 'game-icon', 56)} />}
           <span class={`badge ${g.status}`}>{live ? (g.release && Date.parse(g.release) > BUILD_DATE.getTime() ? fmtDate(g.release) : t('status_live')) : t('status_soon')}</span>
           <h3>{g.name}</h3>
           <p>{g.blurb[lang]}</p>
@@ -47,7 +49,7 @@ const jsonLd = [
           return (
             <tr style={`--g:${g.color}`}>
               <td class="cal-date"><b>{fmtDate(g.release!)}</b><br /><span class="muted small">{d > 0 ? t('days_left', { n: d }) : t('released')}</span></td>
-              <td class="cal-game"><b>{g.status === 'live' ? <a href={L(`/${g.slug}`)}>{g.name}</a> : g.name}</b><br /><span class="muted small">{g.blurb[lang]}</span></td>
+              <td class="cal-game">{GAME_ICONS[g.slug] && <Fragment set:html={inlineSvg(GAME_ICONS[g.slug], 'cal-icon', 36)} />}<b>{g.status === 'live' ? <a href={L(`/${g.slug}`)}>{g.name}</a> : g.name}</b><br /><span class="muted small">{g.blurb[lang]}</span></td>
               <td class="hide-sm muted small">{g.publisher}<br />{g.platforms}</td>
             </tr>
           );
@@ -62,6 +64,8 @@ const jsonLd = [
   .game-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
   .game-card { display: block; position: relative; background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--g); border-radius: var(--radius); padding: 16px; color: var(--text); }
   a.game-card:hover { text-decoration: none; border-color: var(--g); }
+  .game-card :global(.game-icon) { float: right; margin: 0 0 6px 10px; border-radius: 14px; box-shadow: 0 4px 14px color-mix(in srgb, var(--g) 35%, transparent); }
+  .cal-game :global(.cal-icon) { float: left; margin: 2px 12px 2px 0; border-radius: 9px; }
   .game-card h3 { margin: 6px 0 6px; font-size: 1.2rem; }
   .game-card p { margin: 0 0 8px; }
   .badge { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 2px 8px; border-radius: 999px; background: var(--bg2); color: var(--muted); }

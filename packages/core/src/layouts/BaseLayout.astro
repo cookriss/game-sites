@@ -22,8 +22,10 @@ interface Props {
   noindex?: boolean;
   /** Header brand; defaults to the site name linking to the home page (game sections use their own) */
   brand?: NavItem;
+  /** Favicon path; game sections use their own icon */
+  favicon?: string;
 }
-const { site, locale, path, title, description, nav, strings, jsonLd, ogImage, localized = true, alternateLocales, noindex = false, brand } = Astro.props;
+const { site, locale, path, title, description, nav, strings, jsonLd, ogImage, localized = true, alternateLocales, noindex = false, brand, favicon = '/favicon.svg' } = Astro.props;
 const locs = alternateLocales ?? site.locales;
 const abs = (p: string) => site.url + p;
 const canonical = abs(localePath(locale, path));
@@ -47,7 +49,7 @@ const ld = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
   {alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
   {alternates.length > 0 && <link rel="alternate" hreflang="x-default" href={abs(localePath(locs[0], path))} />}
   {noindex && <meta name="robots" content="noindex" />}
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href={favicon} type="image/svg+xml" />
   <meta name="theme-color" content="#0d0f13" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content={site.name} />

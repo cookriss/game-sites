@@ -2,7 +2,7 @@ export type Lang = 'en' | 'es' | 'pt';
 export type L = Record<Lang, string>;
 
 /** Pre-launch / overview page for one game. Every fact should trace to a listed source. */
-export interface NavLink { path: string; label: L; /** Card text on the section home */ blurb?: L; /** Icon id from content/pp/art.ts */ icon?: string }
+export interface NavLink { path: string; label: L; /** Card text on the section home */ blurb?: L; /** Icon id from content/pp/art.ts */ icon?: string; /** Not filled yet: shown as a card with a launch-day tag, kept out of the header menu */ soon?: boolean }
 
 export interface GamePageContent {
   /** Game slug (theme, section nav, publisher lookup). */

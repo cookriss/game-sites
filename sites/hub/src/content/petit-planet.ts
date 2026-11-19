@@ -3,7 +3,7 @@ import type { GamePageContent } from './types';
 export const petitPlanet: GamePageContent = {
   slug: 'petit-planet',
   name: 'Petit Planet',
-  updated: '2026-11-15',
+  updated: '2026-11-19',
   release: '2026-12-04',
   title: {
     en: 'Petit Planet: Release Date, Platforms, Gameplay and Launch Events',
@@ -27,6 +27,7 @@ export const petitPlanet: GamePageContent = {
   },
   facts: [
     { label: { en: 'Release date', es: 'Fecha de lanzamiento', pt: 'Data de lançamento' }, value: { en: '4 December 2026 (global)', es: '4 de diciembre de 2026 (global)', pt: '4 de dezembro de 2026 (global)' } },
+    { label: { en: 'Pre-download', es: 'Predescarga', pt: 'Pré-download' }, value: { en: 'From 1 December 2026', es: 'Desde el 1 de diciembre de 2026', pt: 'A partir de 1º de dezembro de 2026' } },
     { label: { en: 'Developer', es: 'Desarrollador', pt: 'Desenvolvedora' }, value: { en: 'HoYoverse (Genshin Impact, Honkai: Star Rail)', es: 'HoYoverse (Genshin Impact, Honkai: Star Rail)', pt: 'HoYoverse (Genshin Impact, Honkai: Star Rail)' } },
     { label: { en: 'Platforms', es: 'Plataformas', pt: 'Plataformas' }, value: { en: 'PC (HoYoPlay, Epic Games Store), iOS, Android. Switch 2 in 2027', es: 'PC (HoYoPlay, Epic Games Store), iOS y Android. Switch 2 en 2027', pt: 'PC (HoYoPlay, Epic Games Store), iOS e Android. Switch 2 em 2027' } },
     { label: { en: 'Price', es: 'Precio', pt: 'Preço' }, value: { en: 'Free to play', es: 'Gratis', pt: 'Grátis' } },
@@ -34,6 +35,15 @@ export const petitPlanet: GamePageContent = {
     { label: { en: 'Genre', es: 'Género', pt: 'Gênero' }, value: { en: 'Cozy life sim with social features', es: 'Simulador de vida relajada con funciones sociales', pt: 'Simulador de vida tranquila com recursos sociais' } },
   ],
   sections: [
+    {
+      id: 'timeline',
+      h: { en: 'Launch timeline', es: 'Calendario del lanzamiento', pt: 'Calendário do lançamento' },
+      html: {
+        en: '<ol class="timeline"><li class="done"><time>1 Nov</time><span><b>"Launch a Planet"</b> web event opens</span></li><li class=""><time>1 Dec</time><span><b>Pre-download</b> opens on PC and mobile</span></li><li class="star"><time>4 Dec</time><span><b>Global launch</b> and the first Seasonal Creation Event</span></li><li class=""><time>7–8 Dec</time><span>First Neighbor birthdays after launch: Harpeno and Mors (<a href="{L}/petit-planet/birthdays">calendar</a>)</span></li><li class=""><time>2027</time><span><b>Nintendo Switch 2</b> version</span></li></ol>',
+        es: '<ol class="timeline"><li class="done"><time>1 nov</time><span>Abre el evento web <b>"Launch a Planet"</b></span></li><li class=""><time>1 dic</time><span>Empieza la <b>predescarga</b> en PC y móvil</span></li><li class="star"><time>4 dic</time><span><b>Lanzamiento mundial</b> y primer Evento de Creación de Temporada</span></li><li class=""><time>7–8 dic</time><span>Primeros cumpleaños de vecinos tras el lanzamiento: Harpeno y Mors (<a href="{L}/petit-planet/birthdays">calendario</a>)</span></li><li class=""><time>2027</time><span>Versión para <b>Nintendo Switch 2</b></span></li></ol>',
+        pt: '<ol class="timeline"><li class="done"><time>1 nov</time><span>Abre o evento web <b>"Launch a Planet"</b></span></li><li class=""><time>1 dez</time><span>Começa o <b>pré-download</b> no PC e no celular</span></li><li class="star"><time>4 dez</time><span><b>Lançamento mundial</b> e primeiro Evento de Criação da Temporada</span></li><li class=""><time>7–8 dez</time><span>Primeiros aniversários de vizinhos depois do lançamento: Harpeno e Mors (<a href="{L}/petit-planet/birthdays">calendário</a>)</span></li><li class=""><time>2027</time><span>Versão para <b>Nintendo Switch 2</b></span></li></ol>',
+      },
+    },
     {
       id: 'what',
       h: { en: 'What is Petit Planet?', es: '¿Qué es Petit Planet?', pt: 'O que é Petit Planet?' },
@@ -74,9 +84,9 @@ export const petitPlanet: GamePageContent = {
       id: 'unknown',
       h: { en: 'Not announced yet', es: 'Lo que aún no se ha anunciado', pt: 'O que ainda não foi anunciado' },
       html: {
-        en: '<p>The exact launch time, pre-download details, PC requirements, download size and full language list have not been published yet. We will add them here as soon as HoYoverse confirms them.</p>',
-        es: '<p>Aún no se han publicado la hora exacta de lanzamiento, los detalles de la predescarga, los requisitos de PC, el tamaño de descarga ni la lista completa de idiomas. Los añadiremos aquí en cuanto HoYoverse los confirme.</p>',
-        pt: '<p>Ainda não foram divulgados o horário exato de lançamento, os detalhes do pré-download, os requisitos de PC, o tamanho do download nem a lista completa de idiomas. Vamos adicioná-los aqui assim que a HoYoverse confirmar.</p>',
+        en: '<p>The exact launch time, PC requirements, download size and full language list have not been published yet. Pre-download is confirmed from 1 December. We will add them here as soon as HoYoverse confirms them.</p>',
+        es: '<p>Aún no se han publicado la hora exacta de lanzamiento, los requisitos de PC, el tamaño de descarga ni la lista completa de idiomas. La predescarga está confirmada desde el 1 de diciembre. Los añadiremos aquí en cuanto HoYoverse los confirme.</p>',
+        pt: '<p>Ainda não foram divulgados o horário exato de lançamento, os requisitos de PC, o tamanho do download nem a lista completa de idiomas. O pré-download está confirmado a partir de 1º de dezembro. Vamos adicioná-los aqui assim que a HoYoverse confirmar.</p>',
       },
     },
   ],
@@ -99,7 +109,7 @@ export const petitPlanet: GamePageContent = {
     },
     {
       q: { en: 'Can I pre-download Petit Planet?', es: '¿Se puede predescargar Petit Planet?', pt: 'Dá para pré-baixar Petit Planet?' },
-      a: { en: 'Not yet. HoYoverse has not announced pre-download. In its other games it usually opens one or two days before launch.', es: 'Todavía no. HoYoverse no ha anunciado la predescarga. En sus otros juegos suele abrirla uno o dos días antes del lanzamiento.', pt: 'Ainda não. A HoYoverse não anunciou o pré-download. Nos outros jogos dela, ele costuma abrir um ou dois dias antes do lançamento.' },
+      a: { en: 'Yes. HoYoverse has confirmed pre-download from 1 December 2026, three days before launch. The download size has not been announced.', es: 'Sí. HoYoverse ha confirmado la predescarga desde el 1 de diciembre de 2026, tres días antes del lanzamiento. Aún no se sabe cuánto ocupa.', pt: 'Sim. A HoYoverse confirmou o pré-download a partir de 1º de dezembro de 2026, três dias antes do lançamento. O tamanho do download ainda não foi divulgado.' },
     },
     {
       q: { en: 'Where can I download it on PC?', es: '¿Dónde se descarga en PC?', pt: 'Onde baixar no PC?' },
@@ -123,6 +133,7 @@ export const petitPlanet: GamePageContent = {
     },
   ],
   sources: [
+    { label: 'GamingonPhone: Petit Planet launches December 4, pre-download from December 1', url: 'https://gamingonphone.com/news/petit-planet-launches-on-december-4-2026-bringing-hoyoverses-cosy-galactic-life-sim-to-mobile-and-pc' },
     { label: 'PocketGamer.biz: Petit Planet sets December 4th release date', url: 'https://www.pocketgamer.biz/hoyoverses-petit-planet-sets-december-4th-release-date/' },
     { label: 'PocketGamer.biz: Petit Planet entering closed beta on November 7th', url: 'https://www.pocketgamer.biz/hoyoverses-petit-planet-entering-closed-beta-on-november-7th' },
     { label: 'Siliconera: Petit Planet Stardrift closed beta test starts in April', url: 'https://siliconera.com/petit-planet-stardrift-closed-beta-test-starts-in-april/' },

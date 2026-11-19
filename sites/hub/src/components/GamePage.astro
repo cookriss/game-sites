@@ -7,18 +7,20 @@ import PetitPlanetTheme from '../themes/PetitPlanetTheme.astro';
 import AnantaTheme from '../themes/AnantaTheme.astro';
 import { SECTION_NAV } from '../content/nav';
 import { icon } from '../content/pp/art';
+import { GAME_ICONS, inlineSvg } from '../brand';
 interface Props { c: Ctx; page: GamePageContent }
 const { c, page } = Astro.props;
 const { lang, L, t } = c;
 const S = {
-  en: { home: 'Home', updated: 'Updated', facts: 'Key facts', faq: 'Frequently asked questions', sources: 'Sources', launch: 'Launch' },
-  es: { home: 'Inicio', updated: 'Actualizado', facts: 'Datos clave', faq: 'Preguntas frecuentes', sources: 'Fuentes', launch: 'Lanzamiento' },
-  pt: { home: 'Início', updated: 'Atualizado', facts: 'Dados principais', faq: 'Perguntas frequentes', sources: 'Fontes', launch: 'Lançamento' },
+  en: { home: 'Home', updated: 'Updated', facts: 'Key facts', faq: 'Frequently asked questions', sources: 'Sources', launch: 'Launch', from: 'From' },
+  es: { home: 'Inicio', updated: 'Actualizado', facts: 'Datos clave', faq: 'Preguntas frecuentes', sources: 'Fuentes', launch: 'Lanzamiento', from: 'Desde el' },
+  pt: { home: 'Início', updated: 'Atualizado', facts: 'Dados principais', faq: 'Perguntas frequentes', sources: 'Fontes', launch: 'Lançamento', from: 'A partir de' },
 }[lang];
 const pp = page.slug === 'petit-planet';
 const an = page.slug === 'ananta';
 const game = GAMES.find((g) => g.slug === page.slug);
 const fmt = (iso: string) => new Intl.DateTimeFormat(c.locale.lang, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(iso + 'T00:00:00Z'));
+const fmtShort = (iso: string) => new Intl.DateTimeFormat(c.locale.lang, { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(iso + 'T00:00:00Z'));
 const days = page.release ? Math.ceil((Date.parse(page.release + 'T00:00:00Z') - BUILD_DATE.getTime()) / 86400000) : undefined;
 const path = page.path ?? '/' + page.slug;
 const isSub = path !== '/' + page.slug;
@@ -26,7 +28,7 @@ const url = c.site.url + L(path);
 const faq = page.faq ?? [];
 const facts = page.facts ?? [];
 const subnav = SECTION_NAV[page.slug] ?? [];
-const explore = subnav.filter((n) => n.blurb);
+const explore = subnav.filter((n) => n.blurb).sort((a, b) => Number(!!a.soon) - Number(!!b.soon));
 /** Content HTML writes internal links as {L}/path so they get the locale prefix. */
 const fill = (h: string) => h.replace(/\{L\}(\/[^"]*)/g, (_m, p: string) => L(p));
 const jsonLd = [
@@ -41,11 +43,10 @@ const jsonLd = [
   { '@context': 'https://schema.org', '@type': 'Article', headline: page.h1[lang], dateModified: page.updated, inLanguage: c.locale.lang, mainEntityOfPage: url },
 ].filter(Boolean) as object[];
 ---
-<Layout c={c} section={{ brand: { label: page.name, href: L('/' + page.slug) }, nav: subnav.map((n) => ({ href: L(n.path), label: n.label[lang] })) }} path={path} title={page.title[lang]} description={page.description[lang]} jsonLd={jsonLd} noindex={page.noindex}>
+<Layout c={c} section={{ brand: { label: page.name, href: L('/' + page.slug) }, favicon: GAME_ICONS[page.slug] ? `/brand/games/${page.slug}.svg` : undefined, nav: subnav.filter((n) => !n.soon).map((n) => ({ href: L(n.path), label: n.label[lang] })) }} path={path} title={page.title[lang]} description={page.description[lang]} jsonLd={jsonLd} noindex={page.noindex}>
   {pp && <PetitPlanetTheme slot="head" />}
   {an && <AnantaTheme slot="head" />}
-  {pp && <svg slot="brand-icon" class="brand-icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="18" r="10" fill="#9fd8b8" /><ellipse cx="16" cy="18" rx="15" ry="3.5" fill="none" stroke="#ffc6d6" stroke-width="2" transform="rotate(-12 16 18)" /><path d="M16 8V4" stroke="#7a5c3e" stroke-width="2" stroke-linecap="round" /><path d="M16 5c-3-3-6-1-6 1 3 1 5 0 6-1zM16 5c2-3 6-2 6 0-3 1-5 1-6 0z" fill="#8fd17a" /></svg>}
-  {an && <svg slot="brand-icon" class="brand-icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 28V14h5v14M11 28V6h6v22M19 28V11h5v17M26 28V17h3v11" fill="none" stroke="#ff4fa3" stroke-width="2.2" stroke-linejoin="round" /><path d="M2 28h28" stroke="#3fe3ff" stroke-width="2.2" stroke-linecap="round" /></svg>}
+  {GAME_ICONS[page.slug] && <Fragment slot="brand-icon" set:html={inlineSvg(GAME_ICONS[page.slug], 'brand-icon')} />}
   {isSub && <nav class="crumbs small muted"><a href={L('/' + page.slug)}>{page.name}</a>{page.parent && <> › <a href={L(page.parent.path)}>{page.parent.label[lang]}</a></>} › {page.crumb?.[lang]}</nav>}
   <article class:list={["gp", { "theme-pp": pp, "theme-an": an }]} style={`--g:${pp ? '#ff8fab' : an ? '#ff4fa3' : game?.color ?? 'var(--accent)'}`}>
 <header class:list={["hero", { "hero-main": !isSub }]}>
@@ -72,7 +73,7 @@ const jsonLd = [
 </header>
     {!isSub && explore.length > 0 && (
       <nav class="explore" aria-label={page.name}>
-        {explore.map((n) => <a class="explore-card" href={L(n.path)}><Fragment set:html={icon(n.icon ?? '', 44)} /><span><b>{n.label[lang]}</b><small>{n.blurb![lang]}</small></span></a>)}
+        {explore.map((n) => <a class="explore-card" href={L(n.path)}><Fragment set:html={icon(n.icon ?? '', 44)} /><span><b>{n.label[lang]}</b><small>{n.blurb![lang]}</small>{n.soon && page.release && <em class="soon-tag">{S.from} {fmtShort(page.release)}</em>}</span></a>)}
       </nav>
     )}
     {facts.length > 0 && <h2>{S.facts}</h2>}
@@ -98,9 +99,10 @@ const jsonLd = [
   .explore-card b { display: block; color: var(--g); }
   .explore-card small { display: block; color: var(--muted); font-size: .82rem; line-height: 1.35; }
   .explore-card :global(.cat-icon) { flex: none; }
+  .soon-tag { display: inline-block; margin-top: 5px; padding: 1px 8px; border-radius: 999px; font-style: normal; font-size: .72rem; font-weight: 800; background: color-mix(in srgb, var(--g) 15%, var(--panel)); color: var(--g); }
   .hero-main { position: relative; }
   @media (max-width: 560px) { .hero-main .pp-art { position: absolute; top: 10px; right: 10px; width: 52px; height: 52px; } .hero-main h1 { padding-right: 44px; } .hero-main { padding: 16px 14px 8px; } }
-  .brand-icon { width: 26px; height: 26px; vertical-align: -7px; margin-right: 7px; }
+  :global(.brand-icon) { width: 28px; height: 28px; vertical-align: -8px; margin-right: 8px; border-radius: 7px; }
   .gp :global(.cards) { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); margin: 10px 0; }
   .gp :global(.ncard) { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; }
   .gp :global(.nhead) { display: flex; gap: 12px; align-items: center; }
