@@ -43,7 +43,7 @@ const jsonLd = [
   { '@context': 'https://schema.org', '@type': 'Article', headline: page.h1[lang], dateModified: page.updated, inLanguage: c.locale.lang, mainEntityOfPage: url },
 ].filter(Boolean) as object[];
 ---
-<Layout c={c} section={{ brand: { label: page.name, href: L('/' + page.slug) }, favicon: GAME_ICONS[page.slug] ? `/brand/games/${page.slug}.svg` : undefined, nav: subnav.filter((n) => !n.soon).map((n) => ({ href: L(n.path), label: n.label[lang] })) }} path={path} title={page.title[lang]} description={page.description[lang]} jsonLd={jsonLd} noindex={page.noindex}>
+<Layout c={c} section={{ brand: { label: page.name, href: L('/' + page.slug) }, favicon: GAME_ICONS[page.slug] ? `/brand/games/${page.slug}.svg` : undefined, nav: subnav.map((n) => ({ href: L(n.path), label: n.label[lang] })) }} path={path} title={page.title[lang]} description={page.description[lang]} jsonLd={jsonLd} noindex={page.noindex}>
   {pp && <PetitPlanetTheme slot="head" />}
   {an && <AnantaTheme slot="head" />}
   {GAME_ICONS[page.slug] && <Fragment slot="brand-icon" set:html={inlineSvg(GAME_ICONS[page.slug], 'brand-icon')} />}
