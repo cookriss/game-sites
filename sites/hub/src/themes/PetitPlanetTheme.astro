@@ -43,4 +43,13 @@ import '@fontsource/nunito/latin-900.css';
   :root:has(.theme-pp) .nav a:hover { text-decoration: none; border-color: #ff8fab; }
   :root:has(.theme-pp) .brand { font-size: 1.25rem; }
   :root:has(.theme-pp) .network a { font-weight: 700; }
+  :root:has(.theme-pp) .timeline { list-style: none; margin: 10px 0 6px; padding: 0 0 0 6px; position: relative; }
+  :root:has(.theme-pp) .timeline::before { content: ""; position: absolute; left: 13px; top: 8px; bottom: 8px; width: 3px; border-radius: 3px; background: linear-gradient(#ffd27a, #ff8fab, #a99cf0); }
+  :root:has(.theme-pp) .timeline li { position: relative; display: flex; gap: 12px; align-items: baseline; padding: 6px 0 6px 28px; }
+  :root:has(.theme-pp) .timeline li::before { content: ""; position: absolute; left: 2px; top: 10px; width: 14px; height: 14px; border-radius: 50%; background: #fffdf7; border: 3px solid #a99cf0; }
+  :root:has(.theme-pp) .timeline li.done::before { background: #a99cf0; }
+  :root:has(.theme-pp) .timeline li.star::before { left: -2px; top: 5px; width: 22px; height: 22px; border: 0; border-radius: 0; background: #ff8fab;
+    clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+  :root:has(.theme-pp) .timeline time { flex: none; min-width: 64px; font-weight: 900; color: #ff6f94; }
+  :root:has(.theme-pp) .timeline li.star span { font-size: 1.05rem; }
 </style>

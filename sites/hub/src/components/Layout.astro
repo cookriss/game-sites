@@ -1,20 +1,28 @@
 ---
 import BaseLayout from '@gamesites/core/layouts/BaseLayout.astro';
+import '@fontsource/alfa-slab-one/latin-400.css';
 import AdSlot from '@gamesites/core/components/AdSlot.astro';
 import type { Locale, NavItem } from '@gamesites/core/lib/types';
 import type { Ctx } from '../lib/site';
+import { MARK, inlineSvg } from '../brand';
 interface Props {
   c: Ctx; path: string; title: string; description: string; jsonLd?: object | object[]; ogImage?: string; alternateLocales?: Locale[]; ad?: boolean; noindex?: boolean; localized?: boolean;
   /** Game sections: own brand and menu in the header, hub credit moves to the footer */
-  section?: { brand: NavItem; nav: NavItem[] };
+  section?: { brand: NavItem; nav: NavItem[]; favicon?: string };
 }
 const { c, path, title, description, jsonLd, ogImage, alternateLocales, ad = true, noindex = false, localized = true, section } = Astro.props;
+/** Game sections with a sidebar menu pass an empty header nav */
 const nav = section ? section.nav : c.nav;
 const strings = section ? { ...c.strings, network: { href: c.L('/'), label: c.t('network_credit', { name: c.site.name }) } } : c.strings;
 ---
-<BaseLayout site={c.site} locale={c.locale} path={path} title={title} description={description} nav={nav} strings={strings} brand={section?.brand} jsonLd={jsonLd} ogImage={ogImage} alternateLocales={alternateLocales} noindex={noindex} localized={localized}>
+<BaseLayout site={c.site} locale={c.locale} path={path} title={title} description={description} nav={nav} strings={strings} brand={section?.brand} favicon={section?.favicon} jsonLd={jsonLd} ogImage={ogImage} alternateLocales={alternateLocales} noindex={noindex} localized={localized}>
   <slot name="head" slot="head" />
-  <slot name="brand-icon" slot="brand-icon" />
+  {section ? <slot name="brand-icon" slot="brand-icon" /> : <Fragment slot="brand-icon" set:html={inlineSvg(MARK, 'hub-mark', 30)} />}
   <slot />
   {ad && <AdSlot site={c.site} />}
 </BaseLayout>
+<style is:global>
+  /* Hub brand (not game sections): mark + slab wordmark */
+  .site-header .brand:has(.hub-mark) { display: inline-flex; align-items: center; gap: 9px; font-family: "Alfa Slab One", Georgia, serif; font-weight: 400; letter-spacing: .01em; font-size: 1.3rem; color: var(--text); }
+  .hub-mark { border-radius: 8px; flex: none; }
+</style>

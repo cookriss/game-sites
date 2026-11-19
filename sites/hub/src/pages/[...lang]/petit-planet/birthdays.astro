@@ -1,0 +1,112 @@
+---
+/** Neighbor birthday calendar, built from the birthdays in content/petit-planet-neighbors.ts. */
+import GamePage from '../../../components/GamePage.astro';
+import { langParams } from '@gamesites/core/lib/i18n';
+import { ctx, SITE } from '../../../lib/site';
+import { NEIGHBORS } from '../../../content/petit-planet-neighbors';
+import { avatar } from '../../../content/pp/art';
+import type { GamePageContent } from '../../../content/types';
+export function getStaticPaths() { return langParams(SITE); }
+const c = ctx(Astro.params.lang);
+const { lang, L } = c;
+const loc = { en: 'en-GB', es: 'es-ES', pt: 'pt-BR' }[lang];
+const monthName = (m: number) => new Intl.DateTimeFormat(loc, { month: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(2026, m, 1)));
+const dayName = (mmdd: string) => new Intl.DateTimeFormat(loc, { day: 'numeric', month: 'long', timeZone: 'UTC' }).format(new Date(`2026-${mmdd}T00:00:00Z`));
+const known = NEIGHBORS.filter((n) => n.birthday).sort((a, b) => a.birthday!.localeCompare(b.birthday!));
+const unknown = NEIGHBORS.filter((n) => !n.birthday);
+const byMonth = Array.from({ length: 12 }, (_, m) => known.filter((n) => Number(n.birthday!.slice(0, 2)) === m + 1));
+const pic = (n: (typeof NEIGHBORS)[number]) => n.image ? `<img class="avatar" src="${n.image}" alt="" width="40" height="40" loading="lazy">` : avatar(n.name, n.kind);
+const dec = known.filter((n) => n.birthday!.startsWith('12-'));
+const S = {
+  en: { next: 'Next birthday', today: 'Birthday today!', in: 'in {n} days', tomorrow: 'tomorrow', unknown: 'Birthday not known yet', none: 'No known birthdays', role: 'Role' },
+  es: { next: 'Próximo cumpleaños', today: '¡Hoy es su cumpleaños!', in: 'dentro de {n} días', tomorrow: 'mañana', unknown: 'Cumpleaños aún desconocido', none: 'Sin cumpleaños conocidos', role: 'Profesión' },
+  pt: { next: 'Próximo aniversário', today: 'Aniversário hoje!', in: 'em {n} dias', tomorrow: 'amanhã', unknown: 'Aniversário ainda desconhecido', none: 'Nenhum aniversário conhecido', role: 'Profissão' },
+}[lang];
+const names = (list: typeof known) => list.map((n) => `${n.name} (${dayName(n.birthday!)})`).join(lang === 'en' ? ' and ' : lang === 'es' ? ' y ' : ' e ');
+const page: GamePageContent = {
+  slug: 'petit-planet', path: '/petit-planet/birthdays', crumb: { en: 'Birthdays', es: 'Cumpleaños', pt: 'Aniversários' },
+  name: 'Petit Planet', updated: '2026-11-19',
+  title: { en: `Petit Planet Birthdays: Calendar of All ${known.length} Known Neighbor Birthdays`, es: `Cumpleaños de Petit Planet: calendario de los ${known.length} vecinos conocidos`, pt: `Aniversários de Petit Planet: calendário dos ${known.length} vizinhos conhecidos` },
+  description: { en: `When is each Petit Planet Neighbor's birthday? Month-by-month calendar of ${known.length} birthdays from the betas, with the next one highlighted.`, es: `¿Cuándo es el cumpleaños de cada vecino de Petit Planet? Calendario mes a mes con ${known.length} cumpleaños de las betas y el próximo destacado.`, pt: `Quando é o aniversário de cada vizinho de Petit Planet? Calendário mês a mês com ${known.length} aniversários dos betas e o próximo em destaque.` },
+  h1: { en: 'Petit Planet birthday calendar', es: 'Calendario de cumpleaños de Petit Planet', pt: 'Calendário de aniversários de Petit Planet' },
+  lede: { en: `The birthdays of ${known.length} of the ${NEIGHBORS.length} known Neighbors, month by month. The next one is highlighted using your device's date.`, es: `Los cumpleaños de ${known.length} de los ${NEIGHBORS.length} vecinos conocidos, mes a mes. El próximo se destaca según la fecha de tu dispositivo.`, pt: `Os aniversários de ${known.length} dos ${NEIGHBORS.length} vizinhos conhecidos, mês a mês. O próximo aparece em destaque pela data do seu aparelho.` },
+  sections: [],
+  faq: [
+    { q: { en: 'Whose birthday is first after launch?', es: '¿De quién es el primer cumpleaños tras el lanzamiento?', pt: 'De quem é o primeiro aniversário depois do lançamento?' },
+      a: { en: `${names(dec)}, just a few days after the 4 December launch.`, es: `${names(dec)}, pocos días después del lanzamiento del 4 de diciembre.`, pt: `${names(dec)}, poucos dias depois do lançamento em 4 de dezembro.` } },
+    { q: { en: 'Which Neighbors have no known birthday?', es: '¿Qué vecinos no tienen cumpleaños conocido?', pt: 'Quais vizinhos não têm aniversário conhecido?' },
+      a: { en: `${unknown.map((n) => n.name).join(', ')}. They were added in the final beta and their birthdays have not been shown yet.`, es: `${unknown.map((n) => n.name).join(', ')}. Llegaron en la última beta y aún no se ha visto su cumpleaños.`, pt: `${unknown.map((n) => n.name).join(', ')}. Chegaram no último beta e o aniversário deles ainda não apareceu.` } },
+    { q: { en: 'Can birthdays change at launch?', es: '¿Pueden cambiar los cumpleaños en el lanzamiento?', pt: 'Os aniversários podem mudar no lançamento?' },
+      a: { en: 'Yes. These dates come from the closed betas and character teasers. We will check them in the live game from 4 December and update this page.', es: 'Sí. Estas fechas vienen de las betas cerradas y de los avances de personajes. Las comprobaremos en el juego desde el 4 de diciembre y actualizaremos esta página.', pt: 'Sim. Essas datas vêm dos betas fechados e das prévias de personagens. Vamos conferir no jogo a partir de 4 de dezembro e atualizar esta página.' } },
+  ],
+  sources: [
+    { label: 'TechWiser: Petit Planet Neighbors (beta data)', url: 'https://techwiser.com/petit-planet-neighbors/' },
+    { label: 'The Games Wiki: Neighbors', url: 'https://thegameswiki.com/petit-planet/wiki/neighbors' },
+  ],
+};
+---
+<GamePage c={c} page={page}>
+  <div class="next-bday" data-next hidden>
+    <span class="nb-pic" data-pic></span>
+    <div><small>{S.next}</small><b data-name></b><span data-when></span></div>
+  </div>
+  <div class="months">
+    {byMonth.map((list, m) => (
+      <section class:list={['month', { empty: list.length === 0 }]} data-month={m + 1}>
+        <h3>{monthName(m)}</h3>
+        {list.length === 0 ? <p class="muted small">{S.none}</p> : (
+          <ul>{list.map((n) => (
+            <li data-bday={n.birthday} data-name={n.name}>
+              <span class="pic" set:html={pic(n)} />
+              <span><a href={L('/petit-planet/neighbors') + '#' + n.name.toLowerCase()}>{n.name}</a><small>{n.role[lang]}</small></span>
+              <b class="day">{Number(n.birthday!.slice(3))}</b>
+            </li>
+          ))}</ul>
+        )}
+      </section>
+    ))}
+  </div>
+  <p class="note">{S.unknown}: {unknown.map((n) => n.name).join(', ')}.</p>
+  <script is:inline define:vars={{ S }}>
+    (() => {
+      const now = new Date(); const y = now.getFullYear();
+      const today = new Date(y, now.getMonth(), now.getDate());
+      let best = null;
+      document.querySelectorAll('[data-bday]').forEach((li) => {
+        const [m, d] = li.dataset.bday.split('-').map(Number);
+        let t = new Date(y, m - 1, d); if (t < today) t = new Date(y + 1, m - 1, d);
+        const diff = Math.round((t - today) / 86400000);
+        if (!best || diff < best.diff) best = { li, diff };
+      });
+      const cur = document.querySelector(`[data-month="${now.getMonth() + 1}"]`); if (cur) cur.classList.add('current');
+      if (!best) return;
+      best.li.classList.add('is-next');
+      const box = document.querySelector('[data-next]');
+      box.querySelector('[data-name]').textContent = best.li.dataset.name;
+      box.querySelector('[data-pic]').innerHTML = best.li.querySelector('.pic').innerHTML;
+      box.querySelector('[data-when]').textContent = best.diff === 0 ? S.today : best.diff === 1 ? S.tomorrow : S.in.replace('{n}', best.diff);
+      box.hidden = false;
+    })();
+  </script>
+</GamePage>
+<style>
+  .next-bday { display: flex; gap: 14px; align-items: center; padding: 14px 18px; margin: 4px 0 16px; border-radius: 20px; background: linear-gradient(135deg, #fff4f8, #f1edff); box-shadow: 0 4px 18px #ff8fab33; }
+  .next-bday[hidden] { display: none; }
+  .next-bday :global(.avatar) { width: 64px; height: 64px; }
+  .next-bday small { display: block; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: .72rem; }
+  .next-bday b { display: block; font-size: 1.4rem; color: #5a4bc4; line-height: 1.2; }
+  .next-bday span:last-child { color: #ff6f94; font-weight: 800; }
+  .months { display: grid; gap: 12px; align-items: start; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); margin: 0 0 14px; }
+  .month { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 10px 14px 12px; }
+  .month.current { border-color: #ff8fab; box-shadow: 0 0 0 2px #ff8fab55; }
+  .month.empty { opacity: .65; }
+  .month h3 { margin: 2px 0 8px; font-size: 1rem; text-transform: capitalize; color: #ff7a9c; }
+  .month ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .month li { display: flex; align-items: center; gap: 10px; padding: 4px 6px; border-radius: 12px; }
+  .month li.is-next { background: #fff0f5; }
+  .month li > span:nth-child(2) { flex: 1; min-width: 0; }
+  .month li a { font-weight: 800; color: #5a4bc4; }
+  .month li small { display: block; color: var(--muted); font-size: .78rem; line-height: 1.2; }
+  .pic :global(.avatar) { width: 40px; height: 40px; display: block; }
+  .day { flex: none; min-width: 34px; text-align: center; padding: 3px 0; border-radius: 10px; background: #f1edff; color: #5a4bc4; }
+</style>
