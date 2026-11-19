@@ -116,6 +116,8 @@ const jsonLd = [
 <style>
   .with-side { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 24px; align-items: start; }
   .with-side.no-side { display: block; }
+  /* Sections with a sidebar get a wider page so the text column keeps a comfortable width */
+  :global(:root:has(.with-side:not(.no-side)) .wrap) { max-width: 1360px; }
   .side-nav { position: sticky; top: 72px; max-height: calc(100vh - 88px); overflow-y: auto; margin-top: 12px; padding: 10px 8px; border-radius: 20px; background: var(--panel); border: 1px solid var(--line); box-shadow: 0 4px 18px color-mix(in srgb, var(--g, #8f86c9) 14%, transparent); }
   .side-group + .side-group { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); }
   .side-h { margin: 2px 10px 4px; font-size: .7rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
